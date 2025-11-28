@@ -1,0 +1,166 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.AccommodationPage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models;
+@using Umbraco.Cms.Core.Models.Blocks;
+
+@{
+    Layout = "Master.cshtml";
+
+    var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
+    var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
+
+    // Load accommodation items (όπως στον πρώτο)
+    var rooms = Model
+        .DescendantsOfType("accommodationTypePage")
+        .Where(x => x.IsVisible());
+
+    // =============== FILTER LOGIC (from code #2) ===============
+    string searchGroup = Context.Request.Query["group"];
+    List<string> categoriesList = new List<string>();
+
+    foreach (var x in rooms)
+    {
+        if (x.HasValue("roomCategory"))
+        {
+            categoriesList.Add(x.Value("roomCategory").ToString());
+        }
+    }
+
+    var allcategoriesList = categoriesList.Distinct();
+
+    var i = 1;
+}
+
+    <section class="py-offset">
+    
+        <div class="col-11 col-xl-10 m-auto">
+            <div class="content-max-width">
+    
+                @* SECTION TITLE *@
+                @if (!string.IsNullOrEmpty(sectionTitle))
+                {
+                    <h1>@Html.Raw(sectionTitle)</h1>
+                }
+    
+                @* INTRO TEXT *@
+                @if (!string.IsNullOrEmpty(sectionBodyText))
+                {
+                    @Html.Raw(sectionBodyText)
+                }
+    
+            </div>
+        </div>
+    
+        <div class="col-11 col-xl-10 m-auto">
+    
+            @* ======================= FILTERS ======================= *@
+            @if (allcategoriesList.Any())
+            {
+                <div class="filters mt-3 mb-3">
+                    <div class="filters-drop btn btn--more">@Html.Raw(Umbraco.GetDictionaryValue("chooseRoomsGroup"))</div>
+    
+                    <span class="filter @(searchGroup != null ? null : "active")" data-filter="all">
+                        @Umbraco.GetDictionaryValue("all")
+                    </span>
+    
+                    @foreach (var cat in allcategoriesList)
+                    {
+                        var catKey = cat.Replace(" ", "-");
+                        <span class="filter @(searchGroup != null && searchGroup == catKey ? "active" : null)" data-filter="@catKey">
+                            @Html.Raw(Umbraco.GetDictionaryValue(cat))
+                        </span>
+                    }
+                </div>
+            }
+            @* ======================================================== *@
+    
+    
+            <div class="all-rooms row mt-5">
+    
+                @if (rooms.Any())
+                {
+                    foreach (var x in rooms)
+                    {
+                        var bookingUrl = x.Value<Link>("bookingLink", fallback: Fallback.ToAncestors);
+                        var shortDescription = x.Value<string>("shortDescription") ?? string.Empty;
+                        var menuTitle = x.Value<string>("menuTitle") ?? string.Empty;
+    
+                        // Room category (για filtering)
+                        var roomCat = "";
+                        if (x.HasValue("roomCategory"))
+                        {
+                            roomCat = x.Value("roomCategory").ToString().Replace(" ", "-");
+                        }
+    
+                        <div class="room-box col-12 col-md-6" data-filter="@roomCat">
+                            <div class="image-box">
+                                <div class="img-holder">
+    
+                                    @* ROOM LISTING IMAGE *@
+                                    @{
+                                        var img = x.Value<IPublishedContent>("imageForListing");
+                                    }
+    
+                                    @if (img != null)
+                                    {
+                                        <a href="@x.Url()" title="@menuTitle" aria-label="@menuTitle">
+                                            <picture>
+                                                <source srcset="@img.GetCropUrl("horizontal-md")&amp;quality=70&amp;format=webp" media="(min-width: 1600px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("horizontal-md")&amp;quality=70" media="(min-width: 1600px)" type="image/jpeg">
+                                                <source srcset="@img.GetCropUrl("square-lg")&amp;quality=70&amp;format=webp" media="(min-width: 1200px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("square-lg")&amp;quality=70" media="(min-width: 1200px)" type="image/jpeg">
+                                                <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 992px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 992px)" type="image/jpeg">
+                                                <source srcset="@img.GetCropUrl("vertical-lg")&amp;quality=70&amp;format=webp" media="(min-width: 768px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("vertical-lg")&amp;quality=70" media="(min-width: 768px)" type="image/jpeg">
+                                                <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70" media="(min-width: 576px)" type="image/jpeg">
+                                                <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
+                                                <img src="@img.GetCropUrl("square-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)" class="img-fluid lazyload">
+                                            </picture>
+                                        </a>
+                                    }
+    
+                                    @* BOOK NOW BUTTON OVER IMAGE *@
+                                    <div class="btn-over-img">
+                                        @if (bookingUrl != null)
+                                        {
+                                            <a href="@bookingUrl.Url" target="@bookingUrl.Target" title="@bookingUrl.Name" class="btn btn--book">
+                                                @Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))
+                                            </a>
+                                        }
+                                    </div>
+    
+                                </div>
+    
+                                @* TEXT AREA *@
+                                <div class="text-holder">
+                                    <h2 class="h3 header-underline">
+                                        <a href="@x.Url()">@Html.Raw(menuTitle)</a>
+                                    </h2>
+    
+                                    @if (!string.IsNullOrEmpty(shortDescription))
+                                    {
+                                        <div class="description">@Html.Raw(shortDescription)</div>
+                                    }
+    
+                                    <div class="mt-4 text-start">
+                                        <a href="@x.Url()" title="@Html.Raw(menuTitle)" class="box-link">
+                                            @Html.Raw(Umbraco.GetDictionaryValue("ButtonDiscover"))
+                                        </a>
+                                    </div>
+                                </div>
+    
+                            </div>
+                        </div>
+    
+                        i++;
+                    }
+                }
+    
+            </div>
+        </div>
+    
+    </section>

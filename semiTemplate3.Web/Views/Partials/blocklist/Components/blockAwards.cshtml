@@ -1,0 +1,76 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models;
+
+@{
+    var content = (ContentModels.BlockAwards)Model.Content;
+    var settings = (ContentModels.GenericBlockSettings)Model.Settings;
+
+    // Null-safe τιμές
+    bool disabled = settings?.Value<bool>("disableSection") ?? false;
+
+    var title = content?.Value<string>("awardTitle") ?? string.Empty;
+    var awardWidget = content?.Value<string>("awardWidget") ?? string.Empty;
+    bool popup = content?.Value<bool>("popupImage") ?? false;
+
+    var link = content?.Value<Link>("awardLink");
+    var icon = content?.Value<IPublishedContent>("awardImage");
+}
+
+@if (!disabled)
+{
+    <div class="award">
+        @* Αν υπάρχει widget, προτεραιότητα στο widget *@
+        @if (!string.IsNullOrWhiteSpace(awardWidget))
+        {
+            @Html.Raw(awardWidget)
+        }
+        else if (icon != null)
+        {
+            if (popup)
+            {
+                <a href="@icon.Url()" data-fslightbox="gallery">
+                    @Traverse(icon, title)
+                </a>
+            }
+            else if (!string.IsNullOrWhiteSpace(link?.Url))
+            {
+                <a href="@link.Url" aria-label="@link.Name" target="@link.Target" title="@link.Name">
+                    @Traverse(icon, title)
+                </a>
+            }
+            else
+            {
+                @Traverse(icon, title)
+            }
+        }
+    </div>
+}
+
+@functions {
+    // Helper για εμφάνιση SVG ή εικόνας
+    IHtmlContent Traverse(IPublishedContent icon, string title)
+    {
+        if (icon?.Value<string>("umbracoExtension") == "svg")
+        {
+            return new HtmlString(
+                $"<img src=\"{icon.Url()}\" alt=\"{title}\" class=\"img-fluid award-svg\">"
+            );
+        }
+        else if (icon != null)
+        {
+            return new HtmlString($@"
+                <picture>
+                    <source srcset=""{icon.Url()}?format=webp"" type=""image/webp"">
+                    <source srcset=""{icon.Url()}"" type=""image/jpeg"">
+                    <img src=""{icon.Url()}"" alt=""{title}"" class=""img-fluid award-svg"">
+                </picture>
+            ");
+        }
+        else
+        {
+            // fallback σε περίπτωση που icon είναι null
+            return HtmlString.Empty;
+        }
+    }
+}

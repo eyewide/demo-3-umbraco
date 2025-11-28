@@ -1,0 +1,52 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.GalleriesPage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = "Master.cshtml";
+	var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
+	var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
+}
+
+    <section class="py-offset">
+        <div class="col-11 col-xl-10 m-auto">
+            <div class="content-max-width">    
+                @if (!string.IsNullOrEmpty(sectionTitle)){    
+                <h1>@Html.Raw(sectionTitle)</h1>}
+                @if (!string.IsNullOrEmpty(sectionBodyText)){
+                @Html.Raw(sectionBodyText)
+                }
+            </div>
+        </div>
+        <div class="col-11 col-xl-10 m-auto">
+            @if (Model.Children.Where(x => x.IsDocumentType("GalleryPage") && x.IsVisible()).Count()>0 ){ 
+            var items = Model.Children.Where(x => x.IsDocumentType("GalleryPage") && x.IsVisible()); 
+            <div class="row pt-3 galleries-list justify-content-center">
+                @foreach (var item in items){
+                <div class="column col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="image-box">
+                        @if (item.HasValue("imageForListing")){
+                        var img = item.Value<IPublishedContent>("imageForListing");
+                        if (img!=null){
+                        <div class="img-holder">
+                            <a href="@item.Url()">
+                            <picture>
+                                <source srcset="@img.GetCropUrl("vertical-lg")&amp;quality=70&amp;format=webp" media="(min-width: 1200px)" type="image/webp">
+                                <source srcset="@img.GetCropUrl("vertical-lg")&amp;quality=70" media="(min-width: 1200px)" type="image/jpeg">
+                                <source srcset="@img.GetCropUrl("vertical-md")&amp;quality=70&amp;format=webp" media="(min-width: 768px)" type="image/webp">
+                                <source srcset="@img.GetCropUrl("vertical-md")&amp;quality=70" media="(min-width: 768px)" type="image/jpeg">
+                                <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
+                                <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70" media="(min-width: 576px)" type="image/jpeg">
+                                <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
+                                <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
+                                <img src="@img.GetCropUrl("vertical-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)" class="img-fluid fit-img">
+                            </picture></a>
+                        </div>}}
+                        
+                        <div class="text-holder">
+                             <h2 class="h3 header-underline"><a href="@item.Url()">@Html.Raw(item.Value("menuTitle"))</a></h2>  
+                        </div>
+                    </div>
+                </div>}
+            </div>}
+        </div>
+    </section>   

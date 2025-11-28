@@ -1,0 +1,48 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models
+
+@{
+    var homepage = Model.Root();
+
+    // Safety: αν για κάποιο λόγο λείπει το root
+    IEnumerable<IPublishedContent> allNodes = homepage?.DescendantsOrSelf() ?? Enumerable.Empty<IPublishedContent>();
+
+    var footerMenuItems = allNodes.Where(x => x.IsVisible() && (x.Value<bool>("showInFooterMenu") == true));
+
+    var HeaderExplore = Umbraco.GetDictionaryValue("HeaderExplore")?.ToString();
+    var FooterExtraLinks = Umbraco.GetDictionaryValue("FooterExtraLinks")?.ToString();
+}
+
+<div class="footer-nav">
+
+    <div class="h3-sm-header">
+        @if (!string.IsNullOrWhiteSpace(HeaderExplore))
+        {
+            @Html.Raw(HeaderExplore)
+        }
+    </div>
+
+    <ul class="list-unstyled">
+
+        @foreach (var item in footerMenuItems)
+        {
+            var menuTitle = item.Value("menuTitle", fallback: Fallback.ToLanguage)?.ToString();
+
+            if (!string.IsNullOrWhiteSpace(menuTitle))
+            {
+                <li>
+                    <a href="@item.Url()" class="@(item.IsAncestorOrSelf(Model) ? "active" : null)" aria-label="@Html.Raw(menuTitle)">
+                        @Html.Raw(menuTitle)
+                    </a>
+                </li>
+            }
+        }
+
+        @if (!string.IsNullOrWhiteSpace(FooterExtraLinks))
+        {
+            @Html.Raw(FooterExtraLinks)
+        }
+
+    </ul>
+
+</div>

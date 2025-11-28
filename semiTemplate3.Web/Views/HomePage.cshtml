@@ -1,0 +1,29 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.HomePage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+
+@{
+    Layout = "Master.cshtml";
+    var home = Model.AncestorOrSelf(1);
+    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections");
+    var counterBlocks= 1;
+}
+
+    
+
+    @if (blockSections?.Any() == true)
+    {
+        foreach (var block in blockSections)
+        {
+            var content = block.Content;
+            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias+".cshtml", block)
+            counterBlocks++;
+        }
+    }
+ 
+    @await Html.PartialAsync("MyBlocks/Intro-Instagram")
+    
+    @await Html.PartialAsync("MyBlocks/Intro-reviews")
+   

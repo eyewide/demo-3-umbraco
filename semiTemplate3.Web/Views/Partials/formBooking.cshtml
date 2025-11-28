@@ -1,0 +1,67 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models
+@{
+    var root = Model.Root();
+    var bookingLink = root.Value<Link>("bookingLink");
+}
+                
+    <form action="@bookingLink?.Url" method="post" target="_blank" class="row g-0 bookingRow mt-5">
+        <div class="col-12 col-sm-6 col-lg booking-col form-floating">
+          <input type="text" name="checkin" id="checkin" class="form-control" autocomplete="off"> 
+          <label for="checkin" class="form-label">@Html.Raw(Umbraco.GetDictionaryValue("res_Arrival"))</label>
+        </div>
+        <div class="col-12 col-sm-6 col-lg booking-col form-floating">
+            <input type="text" name="checkout" id="checkout" class="form-control" autocomplete="off"> 
+            <label for="checkout" class="form-label">@Html.Raw(Umbraco.GetDictionaryValue("res_Departure"))</label>
+        </div>
+        <div class="col-12 col-sm-6 col-lg booking-col form-floating">
+            <select class="form-control" name="Adults" id="Adults"> 
+              <option>1</option>
+              <option selected="">2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+            </select>
+            <label for="Adults" class="form-label">@Html.Raw(Umbraco.GetDictionaryValue("res_Adults"))</label>
+        </div>
+        <div class="col-12 col-sm-6 col-lg booking-col form-floating">
+            <select id="Rooms" name="Rooms" class="form-select">
+                <option value="1" selected="">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+            <label for="Rooms" class="form-label">@Html.Raw(Umbraco.GetDictionaryValue("res_Rooms"))</label>
+        </div>
+        <div class="col-12 col-sm-6 col-lg booking-col form-floating">
+            <select class="form-control" name="Children" id="Children"> 
+              <option selected="">0</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+            </select>
+            <label for="Children" class="form-label">@Html.Raw(Umbraco.GetDictionaryValue("res_Children"))</label>
+        </div>
+        <div class="col-12 col-sm-6 col-lg booking-col form-floating">
+            <select id="Infant" name="Infant" class="form-select">
+                <option value="0" selected="">0</option>
+                <option value="1">1</option>
+            </select>
+            <label for="Infant" class="form-label">@Html.Raw(Umbraco.GetDictionaryValue("res_Infant"))</label>
+        </div>
+        <div class="col-12 col-sm-6 col-lg booking-col form-floating">
+            <button type="submit" class="btn btn btn--book">@Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))</button>
+        </div>
+    </form>

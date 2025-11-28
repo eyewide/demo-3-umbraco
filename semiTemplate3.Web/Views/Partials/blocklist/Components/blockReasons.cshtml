@@ -1,0 +1,58 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+@using Umbraco.Cms.Core.Models;
+
+@{
+    var currentPage = Umbraco.AssignedContentItem;
+    var content = (ContentModels.BlockReasons)Model.Content;
+    var settings = (ContentModels.GenericBlockSettings)Model.Settings;
+    var home = currentPage?.Root();
+    var bookingLink = home?.Value<Link>("bookingLink");
+    bool disabled = settings?.Value<bool>("disableSection") ?? false;
+
+    var sectionTitle = content?.Value("sectionTitle")?.ToString() ?? string.Empty;
+    var sectionSubtitle = content?.Value("sectionSubtitle")?.ToString() ?? string.Empty;
+    var sectionBodyText = content?.Value("sectionBodyText")?.ToString() ?? string.Empty;
+}
+
+@if (!disabled && !string.IsNullOrWhiteSpace(sectionTitle))
+{
+    <section class="mt-offset section-body-text">
+        <div class="col-11 col-xl-10 m-auto">
+            <div class="row align-items-xl-center position-relative">
+
+                @* TITLE & SUBTITLE *@
+                <div class="col-12 col-xl-4">
+                    <div class="pe-xl-5 me-xl-5">
+                        <h2 class="h1">
+                            @Html.Raw(sectionTitle)
+                            @if (!string.IsNullOrWhiteSpace(sectionSubtitle))
+                            {
+                            <span class="section-subtitle">
+                                @Html.Raw(sectionSubtitle)
+                            </span>
+                            }
+                        </h2>
+
+                        @* BOOKING BUTTON *@
+                        @if (!string.IsNullOrEmpty(bookingLink?.Url))
+                        {
+                            <a href="@bookingLink.Url" target="@bookingLink.Target" title="@bookingLink.Name" class="btn btn--book">
+                                @Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                @* BODY TEXT *@
+                @if (!string.IsNullOrWhiteSpace(sectionBodyText)){
+                <div class="col-12 col-xl-8">
+                    <div class="reasons-text">
+                        @Html.Raw(sectionBodyText)
+                    </div>
+                </div>}
+
+            </div>
+        </div>
+    </section>
+}

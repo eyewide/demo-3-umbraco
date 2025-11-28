@@ -1,0 +1,34 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+
+@{
+    var content = (ContentModels.BlockReviews)Model.Content;
+    var settings = (ContentModels.GenericBlockSettings)Model.Settings;
+
+    // Null-safe τιμές
+    bool disabled = settings?.Value<bool>("disableSection") ?? false;
+
+    var reviewTitle = content?.Value("reviewTitle")?.ToString() ?? string.Empty;
+    var reviewText = content?.Value("reviewText")?.ToString() ?? string.Empty;
+    var reviewName = content?.Value("reviewName")?.ToString() ?? string.Empty;
+}
+
+@if (!disabled)
+{
+    <div class="item">
+        <div class="info">
+            @if (!string.IsNullOrWhiteSpace(reviewTitle))
+            {
+                <div class="heading h4 mb-0">@Html.Raw(reviewTitle)</div>
+            }
+            @if (!string.IsNullOrWhiteSpace(reviewText))
+            {
+                @Html.Raw(reviewText)
+            }
+            @if (!string.IsNullOrWhiteSpace(reviewName))
+            {
+                <div class="testi-name mt-3">@Html.Raw(reviewName)</div>
+            }
+        </div>
+    </div>
+}
