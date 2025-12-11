@@ -1,0 +1,38 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+
+    <form class="contactForm form-inline validateForm" id="ContactForm"> 
+        <div class="row">
+    	    <div class="form-group col-sm-6">	
+    	        <label class="visually-hidden" for="Name">@Html.Raw(Umbraco.GetDictionaryValue("FormName"))</label>
+                <input class="form-control required" id="Name" name="Name" placeholder="@Html.Raw(Umbraco.GetDictionaryValue("FormName"))" type="text">
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="visually-hidden" for="Surname">@Html.Raw(Umbraco.GetDictionaryValue("FormSurname"))</label>	
+                <input class=" form-control" id="Surname" name="Surname" placeholder="@Html.Raw(Umbraco.GetDictionaryValue("FormSurname"))" type="text">
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="visually-hidden" for="Email">@Html.Raw(Umbraco.GetDictionaryValue("FormEmail"))</label>
+                <input class=" form-control" id="Email" name="Email" placeholder="@Html.Raw(Umbraco.GetDictionaryValue("FormEmail"))" type="text">
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="visually-hidden" for="Telephone">@Html.Raw(Umbraco.GetDictionaryValue("FormTelephone"))</label>
+                <input class=" form-control" id="Telephone" maxlength="14" name="Telephone" placeholder="@Html.Raw(Umbraco.GetDictionaryValue("FormTelephone"))" type="text">
+            </div>
+           <div class="form-group col-12">
+                <label class="visually-hidden" for="Message">@Html.Raw(Umbraco.GetDictionaryValue("FormMessage"))</label>
+                <textarea class="form-control" id="Message" name="Message" placeholder="@Html.Raw(Umbraco.GetDictionaryValue("FormMessage"))" rows="5"></textarea>
+            </div> 
+
+            <div class="form-agree col-12 text-start">
+            	<input class="required" id="Agree" name="Agree" type="checkbox" value="true">
+            	<label for="Agree">
+                    @Html.Raw(Umbraco.GetDictionaryValue("FormAgree"))
+            	</label>
+        	</div>
+        
+			<div class="col-sm-12 submit mt-3">
+                <button type="submit" id="send" class="btn btn--bordered black"> @Html.Raw(Umbraco.GetDictionaryValue("ButtonSend"))</button>
+            </div>
+        </div>
+    </form>

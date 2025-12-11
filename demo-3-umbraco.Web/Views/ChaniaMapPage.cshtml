@@ -1,0 +1,187 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.ChaniaMapPage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+@using System.Text.Json
+@using Umbraco.Cms.Core.Models.Blocks;
+
+@{
+    Layout = "Master.cshtml";
+
+    var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
+    var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
+    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections");
+    var mapDestinations = Model.Value<IEnumerable<BlockListItem>>("mapDestinations");
+    var counterBlocks = 1;
+}
+
+<section class="py-offset">
+    <div class="col-11 col-xl-10 mx-auto">
+        <div class="content-max-width text-content">
+            @if (!string.IsNullOrEmpty(sectionTitle)){    
+                <h1>@Html.Raw(sectionTitle)</h1>
+            }
+            @if (!string.IsNullOrEmpty(sectionBodyText)){
+                @Html.Raw(sectionBodyText)
+            }
+        </div>
+    </div>
+</section>
+
+@if (blockSections?.Any() == true)
+{
+    foreach (var block in blockSections)
+    {
+        var content = block.Content;
+        @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias + ".cshtml", block)
+        counterBlocks++;
+    }
+}
+
+<section>
+    <div class="col-11 col-xl-10 mx-auto">
+        <div id="map-tabs" class="mb-3 d-flex flex-wrap justify-content-center">
+            <button onclick="showMarkers('400')" class="btn btn--book m-2">@Html.Raw(Umbraco.GetDictionaryValue("400metres"))</button>
+            <button onclick="showMarkers('600')" class="btn btn--book m-2">@Html.Raw(Umbraco.GetDictionaryValue("600metres"))</button>
+            <button onclick="showMarkers('1000')" class="btn btn--book m-2">@Html.Raw(Umbraco.GetDictionaryValue("1000metres"))</button>
+            <button onclick="showMarkers('MuseumsChurches')" class="btn btn--book m-2">@Html.Raw(Umbraco.GetDictionaryValue("MuseumsChurches"))</button>
+            <button onclick="showMarkers('POI')" class="btn btn--book m-2">@Html.Raw(Umbraco.GetDictionaryValue("poi"))</button>
+            <button onclick="showMarkers('HistoricalsitesMunicipalplaces')" class="btn btn--book m-2">@Html.Raw(Umbraco.GetDictionaryValue("HistoricalsitesMunicipalplaces"))</button>
+        </div>
+
+        <div id="map"></div>
+    </div>
+</section>
+
+
+
+@if (Model.Level >= 3)
+{
+    @await Html.PartialAsync("MyBlocks/other-pagesBoxes")
+}
+
+@* Δημιουργούμε JSON με distance και category *@
+@{
+    var destinationsList = new List<object>();
+    if (mapDestinations != null)
+    {
+        foreach (var block in mapDestinations)
+        {
+            var content = block.Content;
+            var title = content?.Value("destinationTitle")?.ToString() ?? "";
+            var desc = content?.Value("shortDescription")?.ToString() ?? "";
+            var latStr = content?.Value("latitude")?.ToString() ?? "";
+            var lngStr = content?.Value("longtitude")?.ToString() ?? "";
+            var img = content?.Value<IPublishedContent>("imageForListing");
+            var imgUrl = img != null ? img.Url() : "";
+            var distance = content?.Value<string>("distance") ?? "";
+            var category = content?.Value<string>("category") ?? "";
+
+            destinationsList.Add(new {
+                title = title,
+                description = desc,
+                latitude = latStr,
+                longitude = lngStr,
+                image = imgUrl,
+                distance = distance,
+                category = category
+            });
+        }
+    }
+
+    var destinationsJson = JsonSerializer.Serialize(destinationsList);
+}
+
+@section scripts {
+    <script>
+        const mapDestinations = @Html.Raw(destinationsJson);
+        let map, currentMarkers = [];
+
+        function toFloat(v) {
+            if (!v && v !== 0) return null;
+            const n = parseFloat(v);
+            return isNaN(n) ? null : n;
+        }
+
+        window.addEventListener("load", function () {
+    // Δημιουργία χάρτη
+    map = L.map('map', { scrollWheelZoom: false, center: [35.513761403722924,24.020608821877772], zoom: 15 });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Custom icons
+    const defaultIcon = L.icon({ iconUrl: '/images/pin.png', iconSize: [39,53], iconAnchor: [20,53], popupAnchor: [1,-39] });
+    const hotelIcon = L.icon({ iconUrl: '/images/pin-logo.png', iconSize: [63,89], iconAnchor: [31,44], popupAnchor: [1,-31] });
+
+    // Default hotel marker
+    const hotelMarker = L.marker([35.513761403722924,24.020608821877772], { icon: hotelIcon }).addTo(map);
+    hotelMarker.bindPopup("<b>Kydon the heart city hotel chania</b>");
+
+    // Parse συντεταγμένων
+    mapDestinations.forEach(d => {
+        d.latitude = toFloat(d.latitude);
+        d.longitude = toFloat(d.longitude);
+    });
+
+    // *** Αρχικοί markers – όλα μαζί ***
+    mapDestinations.forEach(d => {
+        if(d.latitude === null || d.longitude === null) return;
+
+        const popupHtmlParts = [];
+        if(d.image) popupHtmlParts.push('<div class="destinationMapImage col-6"><img src="' + d.image + '" alt=""></div>');
+        if(d.title || d.description) popupHtmlParts.push(`
+            <div class="destination-text col-6 p-3">
+                ${d.title ? `<h3>${d.title}</h3>` : ''}
+                ${d.description ? `<div style="margin:5px;">${d.description}</div>` : ''}
+            </div>
+        `);
+
+        const marker = L.marker([d.latitude, d.longitude], { icon: defaultIcon })
+            .addTo(map)
+            .bindPopup(popupHtmlParts.join(''))
+            .on('click', function() {
+                map.setView([d.latitude, d.longitude], 16);
+                marker.openPopup();
+            });
+
+        currentMarkers.push(marker);
+    });
+
+    // *** Συνάρτηση εμφάνισης markers με φίλτρο (χωρίς zoom) ***
+    window.showMarkers = function(filter) {
+        // Καθαρισμός προηγούμενων markers
+        currentMarkers.forEach(m => map.removeLayer(m));
+        currentMarkers = [];
+
+        mapDestinations
+            .filter(d => d.distance === filter || d.category === filter)
+            .forEach(d => {
+                if(d.latitude === null || d.longitude === null) return;
+
+                const popupHtmlParts = [];
+                if(d.image) popupHtmlParts.push('<div class="destinationMapImage col-6"><img src="' + d.image + '" alt=""></div>');
+                if(d.title || d.description) popupHtmlParts.push(`
+                    <div class="destination-text col-6 p-3">
+                        ${d.title ? `<h3>${d.title}</h3>` : ''}
+                        ${d.description ? `<div style="margin:5px;">${d.description}</div>` : ''}
+                    </div>
+                `);
+
+                const marker = L.marker([d.latitude, d.longitude], { icon: defaultIcon })
+                    .addTo(map)
+                    .bindPopup(popupHtmlParts.join(''))
+                    .on('click', function() {
+                        map.setView([d.latitude, d.longitude], 16);
+                        marker.openPopup();
+                    });
+
+                currentMarkers.push(marker);
+            });
+
+        // Δεν κάνουμε fitBounds εδώ
+    };
+});
+
+    </script>
+}

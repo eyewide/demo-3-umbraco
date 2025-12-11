@@ -1,0 +1,84 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    var site = Model.Root();
+
+    var selection = site.Children
+        .Where(x =>
+            x.IsVisible() &&
+            x.Value<bool>("hideMainMenu") != true &&
+            x.Value<bool>("hideInNavigation") != true
+        );
+
+    var i = 1;
+}
+
+<ul class="menu level-1">
+    <li>
+        <a href="@site.Url()" 
+           class="hover-target @(site.Id == Model.Id ? "active" : null)">
+            @Html.Raw(site.Value("menuTitle", fallback: Fallback.ToLanguage))
+        </a>
+    </li>
+
+    @foreach (var item in selection)
+    {
+        // visible children except newspage
+        var visibleChildren = item.Children
+            .Where(x =>
+                x.IsVisible() &&
+                !x.IsDocumentType("newspage") &&
+                x.Value<bool>("hideInNavigation") != true
+            ).ToArray();
+
+        if (visibleChildren.Any())
+        {
+            <li class="parent @(item.IsAncestorOrSelf(Model) ? "expanded" : null)">
+                <a href="@item.Url()" 
+                   class="hover-target @(item.IsAncestorOrSelf(Model) ? "active" : null)">
+                    @Html.Raw(item.Value("menuTitle", fallback: Fallback.ToLanguage))
+                </a>
+
+                <span class="arrow" aria-hidden="true">&#8203;</span>
+
+                @{ Traverse(item); }
+            </li>
+        }
+        else
+        {
+            <li>
+                <a href="@item.Url()" class="hover-target @(item.IsAncestorOrSelf(Model) ? "active" : null)">
+                    @Html.Raw(item.Value("menuTitle", fallback: Fallback.ToLanguage))
+                </a>
+            </li>
+        }
+
+        i++;
+    }
+</ul>
+
+@* Helper method – recursive traversal *@
+@{
+    void Traverse(IPublishedContent? item)
+    {
+        if (item == null) return;
+
+        var children = item.Children
+            .Where(x => x.IsVisible() && x.Value<bool>("hideInNavigation") != true)
+            .ToArray();
+
+        if (children.Length == 0) return;
+
+        <ul class="menu level-2 submenu @(item.IsAncestorOrSelf(Model) ? "is-visible" : null)">
+            @foreach (var x in children)
+            {
+                <li>
+                    <a href="@x.Url()" 
+                       class="menu__link @(x.IsAncestorOrSelf(Model) ? "active" : null)">
+                        @Html.Raw(x.Value("menuTitle", fallback: Fallback.ToLanguage))
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+}

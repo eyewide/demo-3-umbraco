@@ -1,0 +1,18 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+    var mediaNode = Model;
+    
+    var altText = currentCulture.Substring(0,2).ToLower() == "el" 
+        ? mediaNode.Value("altTextGR")?.ToString() ?? mediaNode.Value("altText")?.ToString() 
+        : mediaNode.Value("altText")?.ToString();
+
+    // Fallback σε όνομα αρχείου αν το alt είναι κενό
+    if (string.IsNullOrWhiteSpace(altText))
+    {
+        altText = mediaNode.Name;
+    }
+}
+
+@altText

@@ -1,0 +1,59 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models
+
+@{
+    var root = Model.AncestorOrSelf(1);
+    var popUpTitle = root.Value("popupTitle");
+    var popUpText = root.Value("popupText");
+    var popupImage = root.Value<MediaWithCrops>("popupImage");
+    var enablePopup = root.Value<bool?>("enablePopup") == true;
+    var popUpBookingLink= root.Value<Link>("popupBookingLink");
+    var popupMorePageLink = root.Value<Link>("popupMorePageLink");
+}
+
+@if (enablePopup)
+{
+    <div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content padding">
+                @*<div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>*@
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="d-md-flex align-items-center justify-content-strectch no-gutters">
+                    @if (popupImage != null)
+                    {
+                        <div class="img col-md-6">
+                            <picture>
+                                <source srcset="@popupImage.GetCropUrl("horizontal-xs")&amp;quality=75&amp;format=webp" type="image/webp" media="(min-width: 0px)">
+                                    <source srcset="@popupImage.GetCropUrl("horizontal-xs")&amp;quality=75" type="image/jpeg" media="(min-width: 0px)">
+                                    <img src="@popupImage.GetCropUrl("horizontal-xs")&amp;quality=75" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", popupImage)" class="img-fluid">
+                            </picture>
+                        </div>
+                    }
+
+                        <div class="text col-md-6 p-4">
+                            @if (!string.IsNullOrWhiteSpace(popUpTitle?.ToString()))
+                            {
+                                <h2 class="h3">@Html.Raw(popUpTitle)</h2>
+                            }
+    
+                            @if (!string.IsNullOrWhiteSpace(popUpText?.ToString()))
+                            {
+                                @Html.Raw(popUpText)
+                            }
+                            @if (popUpBookingLink != null || popupMorePageLink != null){ 
+                            <div class="popUpButtons mt-4">
+                            @if (popUpBookingLink != null){
+                                <a href="@popUpBookingLink.Url" target="@popUpBookingLink.Target" title="@popUpBookingLink.Name" class="btn btn--book mt-2">@Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))</a>}
+                            @if (popupMorePageLink != null){
+                                <a href="@popupMorePageLink.Url" target="@popupMorePageLink.Target" title="@popupMorePageLink.Name" class="m-2">@Html.Raw(Umbraco.GetDictionaryValue("ButtonMore"))</a>}
+                            </div>}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

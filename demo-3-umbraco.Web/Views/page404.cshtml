@@ -1,0 +1,65 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = "Master.cshtml";
+	var root = Model.Root(); 
+	var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
+	var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
+    var i=1;
+}
+    
+    <section class="py-offset" id="anchor-section">
+        <div class="col-11 col-xl-10 m-auto">
+            <div class="content-max-width">    
+                @if (!string.IsNullOrEmpty(sectionTitle)){    
+                <h1>@Html.Raw(sectionTitle)</h1>}
+                @if (!string.IsNullOrEmpty(sectionBodyText)){
+                <div class="text-start wordbreak privacyList">
+                @Html.Raw(sectionBodyText)
+                </div>}
+                <div class="d-md-flex justify-content-center align-items-start sitemap text-start sitemap">
+                @{
+                	var nodes = root.Children().Where(x => x.IsVisible() && x.Value<bool>("hideInNavigation")!= true);
+                	var nodesPerCol=nodes.Count()/2;
+                    <div class="m-5">
+                        @foreach (var item in nodes)
+                        {
+                            <p><a href="@item.Url()" class="@(item.IsAncestorOrSelf(Model) ? "active" : null)">
+                            @{ TraverseReplaceMenuTitle(item.Value("menuTitle")?.ToString() ?? string.Empty); }
+                            </a></p>
+                            if (i==nodesPerCol){
+                                @Html.Raw("</div><div class=\"m-5\">")
+                            }
+                            i++;
+                        }
+                    </div>}
+                </div> 
+            
+            </div>
+        </div>
+    </section>  
+
+@{
+    void TraverseReplaceMenuTitle(string title) {
+
+    	var charectersGrForReplace = new Dictionary<string,string>();
+    	string menuTitleAfterReplace=title;
+    					
+    	charectersGrForReplace.Add("ά", "α");
+    	charectersGrForReplace.Add("έ", "ε");
+    	charectersGrForReplace.Add("ή", "η");
+    	charectersGrForReplace.Add("ί", "ι");
+    	charectersGrForReplace.Add("ό", "ο");
+    	charectersGrForReplace.Add("ύ", "υ");
+    	charectersGrForReplace.Add("ώ", "ω");
+    
+    					
+    	foreach (var c in charectersGrForReplace.Keys){
+    		menuTitleAfterReplace=menuTitleAfterReplace.Replace(c, charectersGrForReplace[c]);
+    	}	
+    	
+    	@menuTitleAfterReplace
+	}
+	
+}
+   

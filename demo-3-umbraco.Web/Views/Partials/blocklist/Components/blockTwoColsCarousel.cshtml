@@ -1,0 +1,109 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+
+@{
+    var content = (ContentModels.BlockTwoColsCarousel)Model.Content;
+    var settings = (ContentModels.GenericBlockSettings)Model.Settings;
+    
+    // Null-safe έλεγχος για απενεργοποίηση section
+    bool disabled = settings?.Value<bool>("disableSection") ?? false;
+
+    // Node picker
+    IPublishedContent? nodePicker = content?.Value<IPublishedContent>("nodeSelection");
+
+    // Section content variables με default string
+    var title = content?.Value("sectionTitle")?.ToString() ?? string.Empty;
+    var subtitle = content?.Value("sectionSubtitle")?.ToString() ?? string.Empty;
+    var text = content?.Value("sectionBodyText")?.ToString() ?? string.Empty;
+}
+
+@if (!disabled)
+{
+    <section class="mt-offset"> 
+        <div class="col-11 col-xl-10 m-auto">
+            <div class="content-max-width">
+                @* TITLE & SUBTITLE *@
+                @if (!string.IsNullOrWhiteSpace(title))
+                {
+                    <h2 class="h1">
+                        @Html.Raw(title)
+                        @if (!string.IsNullOrWhiteSpace(subtitle))
+                        {
+                            <span class="section-subtitle">@Html.Raw(subtitle)</span>
+                        }
+                    </h2>
+                }
+
+                @* BODY TEXT *@
+                @if (!string.IsNullOrWhiteSpace(text))
+                {
+                    @Html.Raw(text)
+                }
+
+                @* BUTTON LINK *@
+                @if (nodePicker != null && !string.IsNullOrEmpty(nodePicker.Url()))
+                {
+                    <a href="@nodePicker.Url()" title="@nodePicker.Name" class="underline-btn">
+                        @Html.Raw(Umbraco.GetDictionaryValue("ButtonMore"))
+                    </a>
+                }
+            </div>
+
+            @* SUBPAGE LISTING *@
+            @if (nodePicker?.Children?.Any(x => x.IsVisible()) == true)
+            {
+                var subpages = nodePicker.Children.Where(x => x.IsVisible());
+                <div class="sliderContainer mt-2">
+                    <div class="swiper boxesSwiper">
+                        <div class="swiper-wrapper">
+                            @foreach (var x in subpages)
+                            {   
+                                var img = x?.Value<IPublishedContent>("imageForListing");
+                                var shortDescription = x?.Value("shortDescription")?.ToString() ?? string.Empty;
+                                <div class="swiper-slide">
+                                    <div class="simple-box">
+                                        @* IMAGE *@
+                                        @if (img != null)
+                                        {
+                                            <a href="@x?.Url()" title="@Html.Raw(x?.Value("menuTitle")?.ToString())">
+                                                <picture>
+                                                    <source srcset="@img.GetCropUrl("horizontal-xl")&amp;quality=70&amp;format=webp" media="(min-width: 1480px)" type="image/webp">
+                                                    <source srcset="@img.GetCropUrl("horizontal-xl")&amp;quality=70" media="(min-width: 1480px)" type="image/jpeg">
+                                                    <source srcset="@img.GetCropUrl("horizontal-lg")&amp;quality=70&amp;format=webp" media="(min-width: 768px)" type="image/webp">
+                                                    <source srcset="@img.GetCropUrl("horizontal-lg")&amp;quality=70" media="(min-width: 768px)" type="image/jpeg">
+                                                    <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
+                                                    <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70" media="(min-width: 576px)" type="image/jpeg">
+                                                    <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
+                                                    <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
+                                                    <img src="@img.GetCropUrl("square-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)" class="img-fluid lazyload">
+                                                </picture>
+                                            </a>
+                                        }
+
+                                        @* TEXT HOLDER *@
+                                        <div class="text-holder">
+                                            <h3 class="sm-header">
+                                                <a href="@x?.Url()" title="@Html.Raw(x?.Value("menuTitle")?.ToString())">
+                                                    @Html.Raw(x?.Value("menuTitle")?.ToString())
+                                                </a>
+                                            </h3>  
+                                            @if (!string.IsNullOrWhiteSpace(shortDescription)){
+                                            @Html.Raw(shortDescription)}
+                                            <div class="mt-2 text-start">
+                                                <a href="@x?.Url()" title="@Html.Raw(x?.Value("menuTitle")?.ToString())" class="underline-btn">
+                                                    @Html.Raw(Umbraco.GetDictionaryValue("ButtonMore"))
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>    
+                                </div>
+                            }
+                        </div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
+                </div>  
+            }
+        </div>
+    </section>
+}

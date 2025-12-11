@@ -1,0 +1,46 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.GastronomyListPage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models.Blocks;
+@{
+	Layout = "Master.cshtml";
+}
+
+@{
+	Layout = "Master.cshtml";
+	var root = Model.Root();
+	var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
+	var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
+	var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections");
+	var counterBlocks=1;
+	IEnumerable<IPublishedContent>? destinations=null;
+    if (Model.DescendantsOfType("gastronomyInnerPage").Where(x => x.IsVisible()).Count()>0){
+        destinations = Model.DescendantsOfType("gastronomyInnerPage").Where(x => x.IsVisible());
+    }
+}
+
+    <section class="py-offset" id="anchor-section">
+        <div class="col-11 col-xl-10 m-auto">
+            <div class="content-max-width text-content">    
+                @if (!string.IsNullOrEmpty(sectionTitle)){    
+                <h1>@Html.Raw(sectionTitle)</h1>}
+                @if (!string.IsNullOrEmpty(sectionBodyText)){
+                @Html.Raw(sectionBodyText)}
+            </div>
+        </div>
+    </section>
+    
+    @if (blockSections?.Any() == true)
+    {
+        foreach (var block in blockSections)
+        {
+            var content = block.Content;
+            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias+".cshtml", block)
+            counterBlocks++;
+        }
+    }
+    
+    
+    @if (Model.Level>=2){
+        @await Html.PartialAsync("MyBlocks/Listing-subpagesAsContentRows")
+    }  

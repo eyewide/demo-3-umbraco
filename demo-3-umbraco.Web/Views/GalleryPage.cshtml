@@ -1,0 +1,82 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.GalleryPage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = "Master.cshtml";
+	var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
+	var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
+}
+
+    <section class="py-offset">
+        <div class="col-11 col-xl-10 m-auto">
+            <div class="content-max-width">    
+                @if (!string.IsNullOrEmpty(sectionTitle)){    
+                <h1>@Html.Raw(sectionTitle)</h1>}
+                @if (!string.IsNullOrEmpty(sectionBodyText)){
+                @Html.Raw(sectionBodyText)
+                }
+            </div>
+        </div>
+        <div class="col-11 col-xl-10 m-auto">
+            @if(Model.Value<IEnumerable<IPublishedContent>>("galleryImages")?.Count()>0) { 
+                var images = Model.Value<IEnumerable<IPublishedContent>>("galleryImages");
+            @if (images != null){
+                <div id="gallery" class="masonry gallery-page pt-3">
+                    @foreach (var x in images)
+                    {
+                        var image = x.GetCropUrl("square");
+                        <div class="masonry-item">
+                            <a href="@x.Url()?width=1000" data-fslightbox="gallery">
+                                <picture>
+                                    @if (x.Value<int>("umbracoHeight") >= x.Value<int>("umbracoWidth"))
+                                    {
+                                        <source srcset="@x.GetCropUrl("vertical-md")&amp;quality=70&amp;format=webp" media="(min-width: 992px)" type="image/webp">
+                                        <source srcset="@x.GetCropUrl("vertical-md")&amp;quality=70" media="(min-width: 992px)" type="image/jpeg">
+                                        <source srcset="@x.GetCropUrl("vertical-sm")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
+                                        <source srcset="@x.GetCropUrl("vertical-sm")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
+                                        <img src="@x.GetCropUrl("vertical-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", x)" class="img-fluid lazyload">
+                                    }
+                                    else
+                                    {
+                                        <source srcset="@x.GetCropUrl("square-md")&amp;quality=70&amp;format=webp" media="(min-width: 992px)" type="image/webp">
+                                        <source srcset="@x.GetCropUrl("square-md")&amp;quality=70" media="(min-width: 992px)" type="image/jpeg">
+                                        <source srcset="@x.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
+                                        <source srcset="@x.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
+                                        <img src="@x.GetCropUrl("square-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", x)" class="img-fluid lazyload">
+                                    }
+                                </picture>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }}
+            
+            <div class="prevNextWrap">	
+            @{
+                IPublishedContent? nextPublishedContentItem = default;
+                IPublishedContent? prevPublishedContentItem = default;
+                var siblings = Model.SiblingsAndSelf() ?? Enumerable.Empty<IPublishedContent>();
+                IndexedArrayItem<IPublishedContent>[] indexedSiblings = siblings.ToIndexedArray();
+                var currentContentItem = indexedSiblings.FirstOrDefault(x => x.Content?.Id == Model.Id);
+                 @*Prev*@
+                if (currentContentItem != null){           
+                if (currentContentItem.IsNotFirst()) {
+                    IndexedArrayItem<IPublishedContent> nextItem = indexedSiblings[currentContentItem.Index -1];
+                    prevPublishedContentItem = nextItem.Content;
+                    <a href="@prevPublishedContentItem.Url()" class="prev">@Html.Raw(Umbraco.GetDictionaryValue("ButtonPrev"))</a> 
+                }else{
+                	<a href="#" class="disabled prev" onclick="return false;">@Html.Raw(Umbraco.GetDictionaryValue("ButtonPrev"))</a>
+                }
+                @*Next*@
+                if (currentContentItem.IsNotLast()){
+                    IndexedArrayItem<IPublishedContent> nextItem = indexedSiblings[currentContentItem.Index + 1];
+                    nextPublishedContentItem = nextItem.Content;
+                    <a href="@nextPublishedContentItem.Url()" class="next">@Html.Raw(Umbraco.GetDictionaryValue("ButtonNext"))</a> 
+                }else{
+                	<a href="#" class="disabled next" onclick="return false;">@Html.Raw(Umbraco.GetDictionaryValue("ButtonNext"))</a> 
+                }}
+            }
+            </div>
+    
+        </div>
+    </section>

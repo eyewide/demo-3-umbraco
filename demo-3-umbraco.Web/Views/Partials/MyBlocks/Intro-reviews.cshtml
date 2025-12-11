@@ -1,0 +1,35 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+
+@{
+    var blocksReviews = Model.Value<IEnumerable<BlockListItem>>("reviews");
+    var root = Model.Root();
+}
+
+@if (blocksReviews != null && blocksReviews.Any())
+{
+    <section class="py-offset bg-section-light">
+        <div class="testimonials col-10 m-auto">
+            <h2>
+                @Html.Raw(Umbraco.GetDictionaryValue("HeaderReviews"))
+            </h2>
+            <div class="swiper testimonialsSwiper">
+                <div class="swiper-wrapper">
+                    @foreach (var block in blocksReviews)
+                    {
+                        var content = block.Content;
+                        <div class="swiper-slide">
+                            @await Html.PartialAsync("/Views/Partials/blocklist/Components/" + content.ContentType.Alias + ".cshtml", block)
+                        </div>
+                    }
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+}
+
+       
+    

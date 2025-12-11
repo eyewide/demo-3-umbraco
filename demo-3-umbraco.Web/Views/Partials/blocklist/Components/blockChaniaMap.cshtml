@@ -1,0 +1,29 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+
+@{
+    // Ασφαλές cast για Content & Settings
+    var content = Model.Content as ContentModels.BlockChaniaMap;
+    var settings = Model.Settings as ContentModels.GenericBlockSettings;
+
+    // Section Settings
+    var disabled = settings?.Value<bool>("disableSection") ?? false;
+
+    // Section Content Variables
+    var title = content?.Value("destinationTitle")?.ToString() ?? "";
+    var desc = content?.Value("shortDescription")?.ToString() ?? "";
+    var img = content?.Value<IPublishedContent>("imageForListing");
+    var imgUrl = img != null ? img.Url() : "";
+    var lat = content?.Value("latitude")?.ToString() ?? "";
+    var lng = content?.Value("longtitude")?.ToString() ?? "";
+    
+}
+
+    
+    <div class="map-destination-item" data-lat="@lat" data-lng="@lng">
+    @if(!string.IsNullOrEmpty(imgUrl)){
+        <img src="@imgUrl" alt="@title" style="max-width:120px;border-radius:6px;" />
+    }
+        <h4>@title</h4>
+        <p>@Html.Raw(desc)</p>
+    </div>

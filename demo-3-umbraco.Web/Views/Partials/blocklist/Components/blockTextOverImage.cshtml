@@ -1,0 +1,61 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+
+@{
+    var content = (ContentModels.BlockTextOverImage)Model.Content;
+    var settings = (ContentModels.GenericBlockSettings)Model.Settings;
+    
+    // Null-safe έλεγχος για απενεργοποίηση section
+    bool disabled = settings?.Value<bool>("disableSection") ?? false;
+
+    // Content variables με defaults
+    var blockImage = content?.Value<IPublishedContent>("sectionImage");
+    var title = content?.Value<string>("sectionTitle") ?? string.Empty;
+    var subtitle = content?.Value<string>("sectionSubtitle") ?? string.Empty;
+    var body = content?.Value<string>("sectionBodyText") ?? string.Empty;
+}
+
+@if (!disabled)
+{
+    <section class="text-over-img-section mt-offset">
+
+        @* IMAGE *@
+        @if (blockImage != null)
+        {
+            <picture>
+                <source srcset="@blockImage.GetCropUrl("horizontal-xl")&amp;quality=70&amp;format=webp" media="(min-width: 1480px)" type="image/webp">
+                <source srcset="@blockImage.GetCropUrl("horizontal-xl")&amp;quality=70" media="(min-width: 1480px)" type="image/jpeg">
+                <source srcset="@blockImage.GetCropUrl("horizontal-lg")&amp;quality=70&amp;format=webp" media="(min-width: 992px)" type="image/webp">
+                <source srcset="@blockImage.GetCropUrl("horizontal-lg")&amp;quality=70" media="(min-width: 992px)" type="image/jpeg">
+                <source srcset="@blockImage.GetCropUrl("horizontal-md")&amp;quality=70&amp;format=webp" media="(min-width: 768px)" type="image/webp">
+                <source srcset="@blockImage.GetCropUrl("horizontal-md")&amp;quality=70" media="(min-width: 768px)" type="image/jpeg">
+                <source srcset="@blockImage.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
+                <source srcset="@blockImage.GetCropUrl("horizontal-sm")&amp;quality=70" media="(min-width: 576px)" type="image/jpeg">
+                <source srcset="@blockImage.GetCropUrl("horizontal-xs")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
+                <source srcset="@blockImage.GetCropUrl("horizontal-xs")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
+                <img src="@blockImage.GetCropUrl("horizontal-xs")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", blockImage)" class="img-fluid img-fit lazyload">
+            </picture>
+        }
+
+        @* TEXT OVER IMAGE *@
+        <div class="text-over col-12 col-md-10 col-lg-8 col-xl-6">
+            @if (!string.IsNullOrWhiteSpace(title))
+            {
+            <h2>
+                @Html.Raw(title)
+                @if (!string.IsNullOrWhiteSpace(subtitle))
+                {
+                <span class="section-subtitle">@Html.Raw(subtitle)</span>
+                }
+            </h2>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(body))
+            {
+            <div class="mt-4">
+                @Html.Raw(body)
+            </div>
+            }
+        </div>
+    </section>
+}
