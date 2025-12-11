@@ -3,7 +3,6 @@
 @{
     var home = Model.AncestorOrSelf(1);
     var instagramLink = home.Value<Link>("instagramLink");
-    
 }
 
 @if (Model.HasValue("instagramImages")) {
@@ -18,8 +17,8 @@
                     <div class="col-6 col-lg-3">
                         <a href="@instagramLink?.Url" aria-label="@instagramLink?.Name" target="@instagramLink?.Target" title="@instagramLink?.Name">
                             <picture>
-                                <source data-srcset="@j?.GetCropUrl("square-sm")&amp;format=webp&amp;quality=70" type="image/webp" media="(min-width: 992px)">
-                                <source data-srcset="@j?.GetCropUrl("square-sm")&amp;quality=70" type="image/jpeg" media="(min-width: 992px)">
+                                <source srcset="@j?.GetCropUrl("square-sm")&amp;format=webp&amp;quality=70" type="image/webp" media="(min-width: 992px)">
+                                <source srcset="@j?.GetCropUrl("square-sm")&amp;quality=70" type="image/jpeg" media="(min-width: 992px)">
                                 <img data-src="@j?.GetCropUrl("square-sm")&amp;quality=70" src="/images/placeholder.png" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", j)" class="img-fluid lazyload">
                             </picture>
                         </a>

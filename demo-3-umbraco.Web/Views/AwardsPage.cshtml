@@ -6,7 +6,7 @@
 	Layout = "Master.cshtml";
     var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
 	var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
-	var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections");
+	var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections") ?? Enumerable.Empty<BlockListItem>();;
 	var counterBlocks=1;
 }
 
@@ -22,7 +22,7 @@
         </div>
     </section>
     
-     @if (blockSections?.Any() == true)
+    @if (blockSections?.Any() == true)
     {
         foreach (var block in blockSections)
         {
@@ -32,6 +32,6 @@
         }
     }
     
-@if (Model.Level>=3){
-    @await Html.PartialAsync("MyBlocks/other-pagesBoxes")
-}
+    @if (Model.Level>=3){
+        @await Html.PartialAsync("MyBlocks/other-pagesBoxes")
+    }

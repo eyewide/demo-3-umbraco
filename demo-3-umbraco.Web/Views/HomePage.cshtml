@@ -7,7 +7,7 @@
 @{
     Layout = "Master.cshtml";
     var home = Model.AncestorOrSelf(1);
-    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections");
+    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections") ?? Enumerable.Empty<BlockListItem>();;
     var counterBlocks= 1;
 }
 

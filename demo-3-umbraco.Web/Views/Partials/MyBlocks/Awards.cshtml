@@ -5,7 +5,7 @@
 
 @{
     var home = Model.AncestorOrSelf(1);
-    var awards = home.Value<IEnumerable<BlockListItem>>("awards");
+    var awards = home.Value<IEnumerable<BlockListItem>>("awards") ?? Enumerable.Empty<BlockListItem>();;
     var HeaderAwards = Umbraco.GetDictionaryValue("HeaderAwards")?.ToString();
 }
 

@@ -1,101 +1,173 @@
-﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+﻿@using Umbraco.Cms.Web.Common.PublishedModels
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.OffersPage>
-@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
-@using Umbraco.Cms.Core.Models.Blocks;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+
 @{
-	Layout = "Master.cshtml";
-	var root = Model.Root();
-	var bookingUrl= "";
-	var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
-	var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
-	var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections");
-	var counterBlocks=1;
-	IEnumerable<IPublishedContent>? offers=null;
-    if (Model.DescendantsOfType("offerPage").Where(x => x.IsVisible()).Count()>0){
-        offers = Model.DescendantsOfType("offerPage").Where(x => x.IsVisible());
+    Layout = "Master.cshtml";
+
+    var root = Model.Root();
+
+    // BOOKING URL (string)
+    var bookingUrl = string.Empty;
+
+    // CONTENT FIELDS
+    var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
+    var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
+
+    // BLOCKS
+    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections")
+    ?? Enumerable.Empty<BlockListItem>();
+
+    var counterBlocks = 1;
+
+    // OFFERS
+    var offers = Model.DescendantsOfType("offerPage").Where(x => x.IsVisible()).ToList();
+
+    // null → empty list
+    if (!offers.Any())
+    {
+        offers = new List<IPublishedContent>();
     }
 }
 
     <section class="py-offset" id="anchor-section">
+
         <div class="col-11 col-xl-10 m-auto">
-            <div class="content-max-width text-content">    
-                @if (!string.IsNullOrEmpty(sectionTitle)){    
-                <h1>@Html.Raw(sectionTitle)</h1>}
-                @if (!string.IsNullOrEmpty(sectionBodyText)){
-                @Html.Raw(sectionBodyText)}
+            <div class="content-max-width text-content">
+
+                @* TITLE *@
+                @if (!string.IsNullOrWhiteSpace(sectionTitle))
+                {
+                    <h1>@Html.Raw(sectionTitle)</h1>
+                }
+
+                @* BODY TEXT *@
+                @if (!string.IsNullOrWhiteSpace(sectionBodyText))
+                {
+                    @Html.Raw(sectionBodyText)
+                }
+
             </div>
         </div>
-        
-        @if (offers!=null){
-        <div class="col-11 col-xl-10 mx-auto mt-5">
-            <div class="row align-items-start justify-content-center">
-            @foreach (var x in offers){
-                var offerShortDescription = x.Value<string>("shortDescription") ?? string.Empty;
-                if (x.HasValue("offerBookingLink")){
-                    bookingUrl = x.Value("offerBookingLink")?.ToString();
-                }else if (root.HasValue("bookingLink")){
-                    bookingUrl= root.Value("bookingLink")?.ToString();
-                }
-            
-                <div class="col-12 col-md-6 col-xl-4 simple-box">
-                    @if (x.HasValue("imageForListing")){
+
+
+        @* ============ OFFERS LIST ============ *@
+        @if (offers.Any())
+        {
+            <div class="col-11 col-xl-10 mx-auto mt-5">
+                <div class="row align-items-start justify-content-center">
+
+                    @foreach (var x in offers)
+                    {
+                        string offerShortDescription = x.Value<string>("shortDescription") ?? string.Empty;
+
+                        // DETERMINE BOOKING URL FOR EACH OFFER
+                        if (x.HasValue("offerBookingLink"))
+                        {
+                            bookingUrl = x.Value<Link>("offerBookingLink")?.Url ?? string.Empty;
+                        }
+                        else if (root?.HasValue("bookingLink") == true)
+                        {
+                            bookingUrl = root.Value<Link>("bookingLink")?.Url ?? string.Empty;
+                        }
+                        else
+                        {
+                            bookingUrl = string.Empty;
+                        }
+
+                        string? menuTitle = x.Value<string>("menuTitle") ?? string.Empty;
                         var img = x.Value<IPublishedContent>("imageForListing");
-                        if (img!=null){
-                            <div class="img-holder">
-                                <a href="@x.Url()" title="@Html.Raw(x.Value("menuTitle"))">
-                                    <picture>     
-                                        <source srcset="@img.GetCropUrl("square-md")&amp;quality=70&amp;format=webp" media="(min-width: 992px)" type="image/webp">
-                                        <source srcset="@img.GetCropUrl("square-md")&amp;quality=70" media="(min-width: 992px)" type="image/jpeg">
-                                        <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 768px)" type="image/webp">
-                                        <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 768px)" type="image/jpeg">
-                                        <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
-                                        <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70" media="(min-width: 576px)" type="image/jpeg">
-                                        <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
-                                        <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
-                                        <img src="@img.GetCropUrl("square-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)" class="img-fluid fit-img">
-                                    </picture>
-                                </a>
-                                @if (bookingUrl!=""){
-                                <div class="btn-over-img">
-                                    <a href="@bookingUrl" target="_blank" class="btn btn--book" aria-label="@Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))">
-                                       @Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))
+
+                        <div class="col-12 col-md-6 col-xl-4 simple-box">
+
+                            @* IMAGE *@
+                            @if (img != null)
+                            {
+                                <div class="img-holder">
+
+                                    <a href="@x.Url()" title="@menuTitle">
+                                        <picture>
+                                            <source srcset="@img.GetCropUrl("square-md")&amp;quality=70&amp;format=webp"
+                                                media="(min-width: 992px)" type="image/webp">
+
+                                            <source srcset="@img.GetCropUrl("square-md")&amp;quality=70" media="(min-width: 992px)"
+                                                type="image/jpeg">
+
+                                            <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp"
+                                                media="(min-width: 768px)" type="image/webp">
+                                            <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 768px)"
+                                                type="image/jpeg">
+
+                                            <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp"
+                                                media="(min-width: 576px)" type="image/webp">
+                                            <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70" media="(min-width: 576px)"
+                                                type="image/jpeg">
+
+                                            <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" type="image/webp">
+                                            <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" type="image/jpeg">
+
+                                            <img src="@img.GetCropUrl("square-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)"
+                                                class="img-fluid fit-img lazyload">
+                                        </picture>
                                     </a>
+
+                                    @* BOOK NOW BUTTON *@
+                                    @if (!string.IsNullOrWhiteSpace(bookingUrl))
+                                    {
+                                        <div class="btn-over-img">
+                                            <a href="@bookingUrl" target="_blank" class="btn btn--book"
+                                                aria-label="@Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))">
+                                                @Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))
+                                            </a>
+                                        </div>
+                                    }
+
                                 </div>
                             }
-                    
-                       </div>
-                        }
-                    }
-                   
-                    <div class="text-holder">
-                        <h2 class="sm-header"><a href="@x.Url()" aria-label="@Html.Raw(x.Value("menuTitle"))">@Html.Raw(x.Value("menuTitle"))</a></h2>  
-                        
-                        @if (!string.IsNullOrEmpty(offerShortDescription)){ 
-                            @Html.Raw(offerShortDescription)
-                        }
-                         
-                        <div class="pt-4 d-flex">
-                            <div class="align-self-center">
-                                <a href="@x.Url()" aria-label="@Html.Raw(x.Value("menuTitle"))" class="underline-btn">
-                                    @Html.Raw(Umbraco.GetDictionaryValue("ButtonMore"))
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-            }
-            </div>
-        </div>
-        }
-  </section>
 
-  @if (blockSections?.Any() == true)
+                            @* TEXT *@
+                            <div class="text-holder">
+
+                                <h2 class="sm-header">
+                                    <a href="@x.Url()">
+                                        @Html.Raw(menuTitle)
+                                    </a>
+                                </h2>
+
+                                @if (!string.IsNullOrWhiteSpace(offerShortDescription))
+                                {
+                                    @Html.Raw(offerShortDescription)
+                                }
+
+                                <div class="pt-4 d-flex">
+                                    <a href="@x.Url()" class="underline-btn">
+                                        @Html.Raw(Umbraco.GetDictionaryValue("ButtonMore"))
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            </div>
+        }
+
+    </section>
+
+
+    @* ========= BLOCK LIST SECTIONS AFTER OFFERS ========== *@
+    @if (blockSections.Any())
     {
         foreach (var block in blockSections)
         {
             var content = block.Content;
-            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias+".cshtml", block)
-            counterBlocks++;
+
+            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias + ".cshtml",block)
+
+        counterBlocks++;
         }
     }

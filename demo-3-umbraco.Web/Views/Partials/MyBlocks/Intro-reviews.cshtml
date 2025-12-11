@@ -4,7 +4,7 @@
 @using Umbraco.Cms.Core.Models.Blocks
 
 @{
-    var blocksReviews = Model.Value<IEnumerable<BlockListItem>>("reviews");
+    var blocksReviews = Model.Value<IEnumerable<BlockListItem>>("reviews") ?? Enumerable.Empty<BlockListItem>();;
     var root = Model.Root();
 }
 

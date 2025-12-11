@@ -7,7 +7,7 @@
 	var root = Model.Root();
 	var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
 	var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
-	var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections");
+	var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections") ?? Enumerable.Empty<BlockListItem>();;
 	var counterBlocks=1;
 	var exploreInnerPage = Model.DescendantsOfType("exploreInnerPage").Where(x => x.IsVisible());
     var chaniaMapPage = Model.DescendantsOfType("chaniaMapPage").Where(x => x.IsVisible());
@@ -48,13 +48,13 @@
                                 <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70" media="(min-width: 576px)" type="image/jpeg">
                                 <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
                                 <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
-                                <img src="@img.GetCropUrl("square-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)" class="img-fluid fit-img">
+                                <img src="@img.GetCropUrl("square-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)" class="img-fluid fit-img lazyload">
                             </picture>
                         </a>
                     </div>}}
                    
                     <div class="text-holder">
-                        <h2 class="sm-header"><a href="@x.Url()" title="@Html.Raw(x.Value("menuTitle"))">@Html.Raw(x.Value("menuTitle"))</a></h2>  
+                        <h2 class="sm-header"><a href="@x.Url()">@Html.Raw(x.Value("menuTitle"))</a></h2>  
                         
                         @if (!string.IsNullOrEmpty(shortDescription)){ 
                             @Html.Raw(shortDescription)

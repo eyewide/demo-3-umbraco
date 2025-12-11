@@ -1,77 +1,72 @@
-﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+﻿@using Umbraco.Cms.Web.Common.PublishedModels
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.OfferPage>
-@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
-@using Umbraco.Cms.Core.Models;
-@using Umbraco.Cms.Core.Models.Blocks;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
 
 @{
     Layout = "Master.cshtml";
 
     var root = Model.Root();
 
-    // === BOOKING URL (correct Link type) ===
-    Link bookingUrl = null;
+    // BOOKING URL
+    Link? bookingUrl = null;
 
     if (Model.HasValue("offerBookingLink"))
     {
         bookingUrl = Model.Value<Link>("offerBookingLink");
     }
-    else if (root != null && root.HasValue("bookingLink"))
+    else if (root?.HasValue("bookingLink") == true)
     {
         bookingUrl = root.Value<Link>("bookingLink");
     }
 
-    // === CONTENT FIELDS ===
+    // CONTENT FIELDS
     var offerTitle = Model.Value<string>("offerTitle") ?? string.Empty;
     var offerBodyText = Model.Value<string>("offerBodyText") ?? string.Empty;
 
-    // Blocks
-    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections");
+    // BLOCKS
+    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections") ?? Enumerable.Empty<BlockListItem>();
 }
-    
 
-<section class="py-offset" id="anchor-section">
-    <div class="col-11 col-xl-10 mx-auto">
-        <div class="content-max-width text-content">
+    <section class="py-offset" id="anchor-section">
+        <div class="col-11 col-xl-10 mx-auto">
+            <div class="content-max-width text-content">
 
-            @* TITLE *@
-            @if (!string.IsNullOrWhiteSpace(offerTitle))
-            {
-                <h1>@Html.Raw(offerTitle)</h1>
-            }
+                @* TITLE *@
+                @if (!string.IsNullOrWhiteSpace(offerTitle))
+                {
+                    <h1>@Html.Raw(offerTitle)</h1>
+                }
 
-            @* BODY TEXT *@
-            @if (!string.IsNullOrWhiteSpace(offerBodyText))
-            {
-                @Html.Raw(offerBodyText)
-            }
+                @* BODY TEXT *@
+                @if (!string.IsNullOrWhiteSpace(offerBodyText))
+                {
+                    @Html.Raw(offerBodyText)
+                }
 
-            @* BOOK NOW BUTTON — SHOW ONLY IF URL EXISTS *@
-            @if (bookingUrl != null && !string.IsNullOrWhiteSpace(bookingUrl.Url))
-            {
-                <a href="@bookingUrl.Url"
-                   target="@bookingUrl.Target"
-                   class="btn btn--book mt-4"
-                   title="@Umbraco.GetDictionaryValue("ButtonBookNow")">
-                    @Umbraco.GetDictionaryValue("ButtonBookNow")
-                </a>
-            }
+                @* BOOK NOW BUTTON *@
+                @if (bookingUrl != null && !string.IsNullOrWhiteSpace(bookingUrl.Url))
+                {
+                    <a href="@bookingUrl.Url" target="@bookingUrl.Target" class="btn btn--book mt-4" title="@Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))"> @Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))
+                    </a>
+                }
 
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-
-@if (blockSections?.Any() == true)
-{
+    @if (blockSections.Any())
+    {
     foreach (var block in blockSections)
     {
         var content = block.Content;
-        @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias + ".cshtml", block)
-    }
-}
 
-@if (Model.Level >= 3)
-{
-    @await Html.PartialAsync("MyBlocks/other-pagesBoxes")
-}
+        @await Html.PartialAsync( "~/Views/Partials/blockList/Components/" + content.ContentType.Alias + ".cshtml",block)
+    }
+    }
+
+    @if (Model.Level >= 3)
+    {
+        @await Html.PartialAsync("MyBlocks/other-pagesBoxes")
+    }

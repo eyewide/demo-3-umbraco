@@ -6,7 +6,7 @@
 	Layout = "Master.cshtml";
 	var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
 	var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
-	var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections");
+	var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections") ?? Enumerable.Empty<BlockListItem>();;
 	var counterBlocks=1;
 }
 

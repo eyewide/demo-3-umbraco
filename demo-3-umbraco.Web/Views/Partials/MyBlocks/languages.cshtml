@@ -17,9 +17,7 @@
             @foreach (var (culture, infos) in allCultures){
             if (!culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase)){
             <li>
-                <a href="@(Model.Url(culture) != "#" ? Model.Url(culture) : Model.Root().Url(culture))"
-                   class="dropdown-item @(culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase) ? "active" : null)"
-                   aria-label="language">
+                <a href="@(Model.Url(culture) != "#" ? Model.Url(culture) : Model.Root().Url(culture))" class="dropdown-item @(culture.Equals(currentCulture, StringComparison.OrdinalIgnoreCase) ? "active" : null)" aria-label="language">
                     @culture.Substring(0, 2).ToUpper()
                 </a>
             </li>}
