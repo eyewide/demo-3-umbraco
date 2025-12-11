@@ -83,7 +83,7 @@
                 @if (websiteLogo != null)
                 {
                     <a href="@home?.Url()" aria-label="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))" title="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))">
-                        <img src="@websiteLogo.Url()" class="img-fluid" alt="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))">
+                        <img src="@websiteLogo.Url()" class="img-fluid" alt="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))" fetchpriority="high">
                     </a>
                 }
             </div>
