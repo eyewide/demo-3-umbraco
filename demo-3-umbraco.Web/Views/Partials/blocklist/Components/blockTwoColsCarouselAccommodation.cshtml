@@ -7,32 +7,41 @@
     var content = (ContentModels.BlockTwoColsCarouselAccommodation)Model.Content;
     var settings = (ContentModels.GenericBlockSettings)Model.Settings;
 
-     bool disabled = settings?.Value<bool>("disableSection") ?? false;
+    bool disabled = settings?.Value<bool>("disableSection") ?? false;
 
     IPublishedContent? nodePicker = content?.Value<IPublishedContent>("nodeSelection");
 
     var title = content?.Value("sectionTitle")?.ToString() ?? string.Empty;
     var subtitle = content?.Value("sectionSubtitle")?.ToString() ?? string.Empty;
     var text = content?.Value("sectionBodyText")?.ToString() ?? string.Empty;
+
+    var counter = ViewData["counter"] as int? ?? 0;
 }
 
 @if (!disabled)
 {
-    <section class="mt-offset">
+    <section class="mb-offset">
         <div class="col-11 col-xl-10 m-auto">
             <div class="content-max-width">
                 @* TITLE & SUBTITLE *@
-                @if (!string.IsNullOrWhiteSpace(title))
-                {
-                    <h2 class="h1">
-                        @Html.Raw(title)
-                        @if (!string.IsNullOrWhiteSpace(subtitle))
-                        {
-                            <span class="section-subtitle">@Html.Raw(subtitle)</span>
-                        }
-                    </h2>
+                @if (!string.IsNullOrWhiteSpace(title)){
+                if(counter == 1){
+                <h1>
+                    @Html.Raw(title)
+                    @if (!string.IsNullOrWhiteSpace(subtitle)){
+                    <span class="section-subtitle">@Html.Raw(subtitle)</span>
+                    }
+                </h1>
                 }
-
+                else {
+                <h2 class="h1">
+                    @Html.Raw(title)
+                    @if (!string.IsNullOrWhiteSpace(subtitle)){
+                    <span class="section-subtitle">@Html.Raw(subtitle)</span>
+                    }
+                </h2>
+                }
+                }
                 @* BODY TEXT *@
                 @if (!string.IsNullOrWhiteSpace(text))
                 {
@@ -54,7 +63,7 @@
         {
             var subpages = nodePicker.Children.Where(x => x.IsVisible());
             <div class="col-11 col-xl-10 m-auto">
-                <div class="row g-0 justify-content-center mt-2">
+                <div class="row g-0 justify-content-center mt-5">
                     <div class="swiper roomsSwiper">
                         <div class="swiper-wrapper">
                             @foreach (var x in subpages)

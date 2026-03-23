@@ -6,34 +6,20 @@
 	Layout = "Master.cshtml";
 	var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
 	var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
-	var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections") ?? Enumerable.Empty<BlockListItem>();;
-	var counterBlocks=1;
 }
 
     <section class="py-offset">
-        <div class="col-11 col-xl-10 m-auto">
+        <div class="col-11 col-xl-10 mx-auto">
             <div class="content-max-width">    
                 @if (!string.IsNullOrEmpty(sectionTitle)){    
-                <h1>@Html.Raw(sectionTitle)</h1>}
+                <h1>@Html.Raw(sectionTitle)</h1>
+                }
                 @if (!string.IsNullOrEmpty(sectionBodyText)){
                 @Html.Raw(sectionBodyText)
                 }
                 <div class="form-holder">
-                    
                     @await Html.PartialAsync("formCareer")
-                
-            	</div>
-                	
+                </div>
             </div>
         </div>
-    </section>  
-
-     @if (blockSections?.Any() == true)
-    {
-        foreach (var block in blockSections)
-        {
-            var content = block.Content;
-            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias+".cshtml", block)
-            counterBlocks++;
-        }
-    }
+    </section>

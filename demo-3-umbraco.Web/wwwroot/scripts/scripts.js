@@ -178,6 +178,10 @@ document.addEventListener(
           spaceBetween: 20,
         },
         1200: {
+          slidesPerView: 1.3,
+          spaceBetween: 20,
+        },
+        1500: {
           slidesPerView: 2.3,
           spaceBetween: 20,
         },
@@ -207,12 +211,6 @@ document.addEventListener(
       pagination: {
         el: ".swiper-pagination",
         clickable: true,
-      },
-      breakpoints: {
-        768: {
-          slidesPerView: 2,
-          spaceBetween: 50,
-        },
       }
     });
     var swiperGal = new Swiper(".simpleGallerySwiper", {

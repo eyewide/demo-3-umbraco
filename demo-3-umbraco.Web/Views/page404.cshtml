@@ -9,18 +9,20 @@
 }
     
     <section class="py-offset" id="anchor-section">
-        <div class="col-11 col-xl-10 m-auto">
+        <div class="col-11 col-xl-10 mx-auto">
             <div class="content-max-width">    
                 @if (!string.IsNullOrEmpty(sectionTitle)){    
-                <h1>@Html.Raw(sectionTitle)</h1>}
+                <h1>@Html.Raw(sectionTitle)</h1>
+                }
                 @if (!string.IsNullOrEmpty(sectionBodyText)){
                 <div class="text-start wordbreak privacyList">
                 @Html.Raw(sectionBodyText)
-                </div>}
+                </div>
+                }
                 <div class="d-md-flex justify-content-center align-items-start sitemap text-start sitemap">
                 @{
-                	var nodes = root.Children().Where(x => x.IsVisible() && x.Value<bool>("hideInNavigation")!= true);
-                	var nodesPerCol=nodes.Count()/2;
+                var nodes = root.Children().Where(x => x.IsVisible() && x.Value<bool>("hideInNavigation")!= true);
+                var nodesPerCol=nodes.Count()/2;
                     <div class="m-5">
                         @foreach (var item in nodes)
                         {
@@ -32,7 +34,8 @@
                             }
                             i++;
                         }
-                    </div>}
+                    </div>
+                    }
                 </div> 
             
             </div>
@@ -41,25 +44,23 @@
 
 @{
     void TraverseReplaceMenuTitle(string title) {
+    var charectersGrForReplace = new Dictionary<string,string>();
+    string menuTitleAfterReplace=title;
+                    
+    charectersGrForReplace.Add("ά", "α");
+    charectersGrForReplace.Add("έ", "ε");
+    charectersGrForReplace.Add("ή", "η");
+    charectersGrForReplace.Add("ί", "ι");
+    charectersGrForReplace.Add("ό", "ο");
+    charectersGrForReplace.Add("ύ", "υ");
+    charectersGrForReplace.Add("ώ", "ω");
 
-    	var charectersGrForReplace = new Dictionary<string,string>();
-    	string menuTitleAfterReplace=title;
-    					
-    	charectersGrForReplace.Add("ά", "α");
-    	charectersGrForReplace.Add("έ", "ε");
-    	charectersGrForReplace.Add("ή", "η");
-    	charectersGrForReplace.Add("ί", "ι");
-    	charectersGrForReplace.Add("ό", "ο");
-    	charectersGrForReplace.Add("ύ", "υ");
-    	charectersGrForReplace.Add("ώ", "ω");
+                    
+    foreach (var c in charectersGrForReplace.Keys){
+        menuTitleAfterReplace=menuTitleAfterReplace.Replace(c, charectersGrForReplace[c]);
+    }	
     
-    					
-    	foreach (var c in charectersGrForReplace.Keys){
-    		menuTitleAfterReplace=menuTitleAfterReplace.Replace(c, charectersGrForReplace[c]);
-    	}	
-    	
-    	@menuTitleAfterReplace
+    @menuTitleAfterReplace
 	}
 	
 }
-   

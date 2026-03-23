@@ -14,7 +14,7 @@
     var sectionSubtitle = content?.Value("sectionSubtitle")?.ToString() ?? string.Empty;
     var sectionBodyText = content?.Value("sectionBodyText")?.ToString() ?? string.Empty;
     var revertCols = content?.Value("revertCols")?.ToString() == "True";
-    var revertTextClass = revertCols ? "order-lg-2" : "";
+    var revertTextClass = revertCols ? "order-lg-2 ms-lg-auto" : "me-lg-auto";
     var revertImageClass = revertCols ? "order-lg-1 revert" : "";
 
     // Node picker link
@@ -22,31 +22,44 @@
 
     // Section Images
     var blockImages = content?.Value<IEnumerable<IPublishedContent>>("sectionImages") ?? Enumerable.Empty<IPublishedContent>();
-    var textColumnClass = blockImages.Any() ? "col-12 col-lg-6 px-lg-5" : "col-10 m-auto";
+
+    var counter = ViewData["counter"] as int? ?? 0;
+
+    var i=1;
+    
 }
 
-@if (!disabled)
-{
-    <section class="mt-offset section-body-text">
-        <div class="col-11 col-xl-10 m-auto">
-            <div class="row g-0 align-items-xl-center position-relative">
+    @if (!disabled){
+    <section class="mb-offset">
+        <div class="col-11 col-xl-10 mx-auto">
+            <div class="row align-items-center">
 
                 @* TEXT COLUMN *@
-                <div class="place-text text-start @textColumnClass @revertTextClass">
-                    @if (!string.IsNullOrWhiteSpace(sectionTitle))
-                    {
-                        <h2>
-                            @Html.Raw(sectionTitle)
-                            @if (!string.IsNullOrWhiteSpace(sectionSubtitle))
-                            {
-                                <span class="section-subtitle">@Html.Raw(sectionSubtitle)</span>
-                            }
-                        </h2>
+                <div class="col-12 col-lg-5 @revertTextClass">
+                    @if (!string.IsNullOrWhiteSpace(sectionTitle)){
+                    if(counter == 1){
+                    <h1>
+                        @Html.Raw(sectionTitle)
+                        @if (!string.IsNullOrWhiteSpace(sectionSubtitle)){
+                        <span class="section-subtitle">@Html.Raw(sectionSubtitle)</span>
+                        }
+                    </h1>
+                    }
+                    else {
+                    
+                    <h2>
+                        @Html.Raw(sectionTitle)
+                        @if (!string.IsNullOrWhiteSpace(sectionSubtitle))
+                        {
+                        <span class="section-subtitle">@Html.Raw(sectionSubtitle)</span>
+                        }
+                    </h2>
+                    }
                     }
 
                     @if (!string.IsNullOrWhiteSpace(sectionBodyText))
                     {
-                        <div class="mt-4">@Html.Raw(sectionBodyText)</div>
+                    <div class="mt-4">@Html.Raw(sectionBodyText)</div>
                     }
 
                     @if (nodePicker != null && !string.IsNullOrWhiteSpace(nodePicker.Url()))
@@ -57,62 +70,46 @@
                     }
                 </div>
 
-                @* IMAGE COLUMN *@
-                @if (blockImages.Any())
-                {
-                    <div class="col-12 col-lg-6 place-img position-relative @revertImageClass">
-                        @if (blockImages.Count() > 1)
-                        {
-                            <div class="sliderContainer">
-                                <div class="swiper simpleGallerySwiper">
-                                    <div class="swiper-wrapper">
-                                        @foreach (var img in blockImages)
-                                        {
-                                            if (img == null) continue;
-                                            <div class="swiper-slide">
-                                                <picture>
-                                                    <source srcset="@img.GetCropUrl("square-xl")&amp;quality=70&amp;format=webp" media="(min-width: 1481px)" type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("square-xl")&amp;quality=70" media="(min-width: 1481px)" type="image/jpeg">
-                                                    <source srcset="@img.GetCropUrl("vertical-lg")&amp;quality=70&amp;format=webp" media="(min-width: 992px)" type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("vertical-lg")&amp;quality=70" media="(min-width: 992px)" type="image/jpeg">
-                                                    <source srcset="@img.GetCropUrl("horizontal-md")&amp;quality=70&amp;format=webp" media="(min-width: 768px)" type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("horizontal-md")&amp;quality=70" media="(min-width: 768px)" type="image/jpeg">
-                                                    <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70" media="(min-width: 576px)" type="image/jpeg">
-                                                    <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
-                                                    <img src="@img.GetCropUrl("square-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)" class="img-fluid lazyload">
-                                                </picture>
-                                            </div>
-                                        }
-                                    </div>
-                                    <div class="swiper-button-prev"></div>
-                                    <div class="swiper-button-next"></div>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            var img = blockImages.FirstOrDefault();
-                            if (img != null)
-                            {
-                                <picture>
-                                    <source srcset="@img.GetCropUrl("square-xl")&amp;quality=70&amp;format=webp" media="(min-width: 1481px)" type="image/webp">
-                                    <source srcset="@img.GetCropUrl("square-xl")&amp;quality=70" media="(min-width: 1481px)" type="image/jpeg">
-                                    <source srcset="@img.GetCropUrl("vertical-lg")&amp;quality=70&amp;format=webp" media="(min-width: 992px)" type="image/webp">
-                                    <source srcset="@img.GetCropUrl("vertical-lg")&amp;quality=70" media="(min-width: 992px)" type="image/jpeg">
-                                    <source srcset="@img.GetCropUrl("horizontal-md")&amp;quality=70&amp;format=webp" media="(min-width: 768px)" type="image/webp">
-                                    <source srcset="@img.GetCropUrl("horizontal-md")&amp;quality=70" media="(min-width: 768px)" type="image/jpeg">
-                                    <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
-                                    <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70" media="(min-width: 576px)" type="image/jpeg">
-                                    <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
-                                    <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
-                                    <img src="@img.GetCropUrl("square-sm")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)" class="img-fluid lazyload">
-                                </picture>
-                            }
-                        }
-                    </div>
+                @if (blockImages!=null){
+                <div class="col-12 col-lg-6 place-img mt-5 mt-lg-0 position-relative @revertImageClass">
+                
+                @if (blockImages.Count()>1){
+                    @Html.Raw("<div class=\"sliderContainer\">")
+                    @Html.Raw("<div class=\"swiper simpleGallerySwiper\">")
+                    @Html.Raw("<div class=\"swiper-wrapper\">")
                 }
+                @foreach (var x in blockImages){
+                <div class="@(blockImages.Count()>1 ? "swiper-slide" : "imgCol" )">
+                    <picture>
+                        <source srcset="@x.GetCropUrl("square-xl")&quality=70&format=webp" media="(min-width: 1481px)" type="image/webp">
+                        <source srcset="@x.GetCropUrl("square-xl")&quality=70" media="(min-width: 1481px)" type="image/jpeg">
+                        @*<source srcset="@x.GetCropUrl("square-lg")&quality=70&format=webp" media="(min-width: 1200px)" type="image/webp">
+                        <source srcset="@x.GetCropUrl("square-lg")&quality=70" media="(min-width: 1200px)" type="image/jpeg">*@
+                        <source srcset="@x.GetCropUrl("vertical-lg")&quality=70&format=webp" media="(min-width: 992px)" type="image/webp">
+                        <source srcset="@x.GetCropUrl("vertical-lg")&quality=70" media="(min-width: 992px)" type="image/jpeg">
+                        <source srcset="@x.GetCropUrl("horizontal-md")&quality=70&format=webp" media="(min-width: 768px)" type="image/webp">
+                        <source srcset="@x.GetCropUrl("horizontal-md")&quality=70" media="(min-width: 768px)" type="image/jpeg">
+                        <source srcset="@x.GetCropUrl("horizontal-sm")&quality=70&format=webp" media="(min-width: 576px)" type="image/webp">
+                        <source srcset="@x.GetCropUrl("horizontal-sm")&quality=70" media="(min-width: 576px)" type="image/jpeg">
+                        <source srcset="@x.GetCropUrl("square-sm")&quality=70&format=webp" media="(min-width: 0px)" type="image/webp">
+                        <source srcset="@x.GetCropUrl("square-sm")&quality=70" media="(min-width: 0px)" type="image/jpeg">
+                        <img src="@x.GetCropUrl("square-sm")&quality=70" alt="Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", x)" class="img-fluid ">                
+                    </picture>
+                </div>
+                i++;    
+                }
+                
+                @if (blockImages.Count()>1){
+                    @Html.Raw("</div>")
+                    @Html.Raw("<div class=\"swiper-button-prev\"></div>")
+                    @Html.Raw("<div class=\"swiper-button-next\"></div>")
+                    @Html.Raw("</div>")
+                    @Html.Raw("</div>")
+
+                }
+            </div>    
+            }
+                
             </div>
         </div>
     </section>

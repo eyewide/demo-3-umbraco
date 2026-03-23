@@ -12,14 +12,16 @@
 
 
     <section class="py-offset" id="anchor-section">
-        <div class="col-11 col-xl-10 m-auto">
+        <div class="col-11 col-xl-10 mx-auto">
             <div class="content-max-width text-content">
                 @if (!string.IsNullOrEmpty(sectionTitle)){    
-                <h1>@Html.Raw(sectionTitle)</h1>}
+                <h1>@Html.Raw(sectionTitle)</h1>
+                }
                 @if (!string.IsNullOrEmpty(sectionBodyText)){
-                <div class="text-start wordbreak privacyList">
+                <div class="text-start wordbreak privacyList mt-5">
                 @Html.Raw(sectionBodyText)
-                </div>}
+                </div>
+                }
             </div>
         </div>
     </section>   

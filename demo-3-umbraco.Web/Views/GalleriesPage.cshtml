@@ -62,10 +62,10 @@
                                 }
                             }
 
+                            @if (!string.IsNullOrEmpty(item.Value<string>("menuTitle"))){
                             <div class="text-holder">
-                                <h2 class="h3 header-underline"><a href="@item.Url()">@Html.Raw(item.Value("menuTitle"))</a>
-                                </h2>
-                            </div>
+                                <h2 class="h3 header-underline"><a href="@item.Url()" aria-label="@Html.Raw(item.Value("menuTitle"))">@Html.Raw(item.Value("menuTitle"))</a></h2>  
+                            </div>}
                         </div>
                     </div>
                 }

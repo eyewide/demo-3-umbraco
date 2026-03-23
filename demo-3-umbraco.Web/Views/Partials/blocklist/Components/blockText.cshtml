@@ -1,0 +1,55 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockListItem>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+
+@{
+    // Ασφαλές cast για Content & Settings
+    var content = Model.Content as ContentModels.BlockText;
+    var settings = Model.Settings as ContentModels.GenericBlockSettings;
+
+    // Section Settings
+    var disabled = settings?.Value<bool>("disableSection") ?? false;
+
+    // Section Content Variables
+    var sectionTitle = content?.Value("sectionTitle")?.ToString() ?? string.Empty;
+    var sectionSubtitle = content?.Value("sectionSubtitle")?.ToString() ?? string.Empty;
+    var sectionBodyText = content?.Value("sectionBodyText")?.ToString() ?? string.Empty;
+    
+    var counter = ViewData["counter"] as int? ?? 0;
+}
+    
+    @if (!disabled){
+    <section class="mb-offset section-body-text">
+        <div class="col-11 mx-auto">
+            <div class="content-max-width text-content">
+
+                @* TEXT COLUMN *@
+                <div class="place-text text-center">
+                    @if (!string.IsNullOrWhiteSpace(sectionTitle)){
+                    if(counter == 1){
+                    <h1>
+                        @Html.Raw(sectionTitle)
+                        @if (!string.IsNullOrWhiteSpace(sectionSubtitle)){
+                        <span class="section-subtitle">@Html.Raw(sectionSubtitle)</span>
+                        }
+                    </h1>
+                    }
+                    else {
+                    
+                    <h2>
+                        @Html.Raw(sectionTitle)
+                        @if (!string.IsNullOrWhiteSpace(sectionSubtitle))
+                        {
+                        <span class="section-subtitle">@Html.Raw(sectionSubtitle)</span>
+                        }
+                    </h2>
+                    }
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(sectionBodyText)){
+                    <div class="mt-4">@Html.Raw(sectionBodyText)</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}

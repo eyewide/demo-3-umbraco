@@ -9,7 +9,7 @@
     var HeaderAwards = Umbraco.GetDictionaryValue("HeaderAwards")?.ToString();
 }
 
-<div class="awards mb-3">
+<div class="awards mt-5 mb-3">
     <div class="mt-2 d-flex flex-wrap justify-content-start two-items">
     @foreach (var block in awards ?? Enumerable.Empty<BlockListItem>()){
         var content = block.Content;

@@ -66,12 +66,20 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockListModel BodySections => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockListModel>(_publishedValueFallback, "bodySections");
 
 		///<summary>
-		/// Instagram Images: Select the Instagram images.
+		/// Instagram Hashtag: Enter the instagram hashtag.
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("instagramImages")]
-		public virtual global::System.Collections.Generic.IEnumerable<global::Umbraco.Cms.Core.Models.MediaWithCrops> InstagramImages => this.Value<global::System.Collections.Generic.IEnumerable<global::Umbraco.Cms.Core.Models.MediaWithCrops>>(_publishedValueFallback, "instagramImages");
+		[ImplementPropertyType("instagramHashtag")]
+		public virtual string InstagramHashtag => this.Value<string>(_publishedValueFallback, "instagramHashtag");
+
+		///<summary>
+		/// Instagram Image: Select the Instagram image
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("instagramImage")]
+		public virtual global::Umbraco.Cms.Core.Models.MediaWithCrops InstagramImage => this.Value<global::Umbraco.Cms.Core.Models.MediaWithCrops>(_publishedValueFallback, "instagramImage");
 
 		///<summary>
 		/// Instagram Link: Enter the Instagram link.
@@ -80,6 +88,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("instagramLink")]
 		public virtual global::Umbraco.Cms.Core.Models.Link InstagramLink => this.Value<global::Umbraco.Cms.Core.Models.Link>(_publishedValueFallback, "instagramLink");
+
+		///<summary>
+		/// Instagram Title: Enter the instagram title.
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("instagramTitle")]
+		public virtual string InstagramTitle => this.Value<string>(_publishedValueFallback, "instagramTitle");
 
 		///<summary>
 		/// Reviews: Enter the reviews.
@@ -105,26 +121,11 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual string EspaWidgets => global::Umbraco.Cms.Web.Common.PublishedModels.EspaBanners.GetEspaWidgets(this, _publishedValueFallback);
 
 		///<summary>
-		/// Hide in Main Menu: Click this if you want to hide the page from navigation.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[ImplementPropertyType("hideInMainMenu")]
-		public virtual bool HideInMainMenu => global::Umbraco.Cms.Web.Common.PublishedModels.Navigation.GetHideInMainMenu(this, _publishedValueFallback);
-
-		///<summary>
 		/// Hide in Navigation: Click this if you want to hide the page from navigation.
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		[ImplementPropertyType("hideInNavigation")]
 		public virtual bool HideInNavigation => global::Umbraco.Cms.Web.Common.PublishedModels.Navigation.GetHideInNavigation(this, _publishedValueFallback);
-
-		///<summary>
-		/// Menu Image: Select the image menu.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("menuImage")]
-		public virtual global::Umbraco.Cms.Core.Models.MediaWithCrops MenuImage => global::Umbraco.Cms.Web.Common.PublishedModels.Navigation.GetMenuImage(this, _publishedValueFallback);
 
 		///<summary>
 		/// Menu Title: Enter the menu title for this page.

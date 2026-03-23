@@ -10,26 +10,24 @@
 
 @if (blocksReviews != null && blocksReviews.Any())
 {
-    <section class="py-offset bg-section-light">
-        <div class="testimonials col-10 m-auto">
-            <h2>
-                @Html.Raw(Umbraco.GetDictionaryValue("HeaderReviews"))
-            </h2>
-            <div class="swiper testimonialsSwiper">
-                <div class="swiper-wrapper">
-                    @foreach (var block in blocksReviews)
-                    {
-                        var content = block.Content;
-                        <div class="swiper-slide">
-                            @await Html.PartialAsync("/Views/Partials/blocklist/Components/" + content.ContentType.Alias + ".cshtml", block)
-                        </div>
-                    }
-                </div>
-                <div class="swiper-pagination"></div>
+    <div class="testimonials col-10 col-xxl-7 m-auto pt-5 pt-lg-0">
+        @if (!string.IsNullOrEmpty(Umbraco.GetDictionaryValue("HeaderReviews"))){
+        <h2 class="text-white">
+            @Html.Raw(Umbraco.GetDictionaryValue("HeaderReviews"))
+        </h2>
+        }
+        <div class="swiper testimonialsSwiper pb-5">
+            <div class="swiper-wrapper">
+                @foreach (var block in blocksReviews)
+                {
+                    var content = block.Content;
+                    <div class="swiper-slide">
+                        @await Html.PartialAsync("/Views/Partials/blocklist/Components/" + content.ContentType.Alias + ".cshtml", block)
+                    </div>
+                }
             </div>
+            <div class="swiper-pagination"></div>
         </div>
-    </section>
-}
-
-       
+    </div>
     
+}

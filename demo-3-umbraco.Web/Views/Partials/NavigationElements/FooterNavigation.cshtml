@@ -14,13 +14,11 @@
 }
 
 <div class="footer-nav">
-
+    @if (!string.IsNullOrWhiteSpace(HeaderExplore)){
     <div class="h3-sm-header">
-        @if (!string.IsNullOrWhiteSpace(HeaderExplore))
-        {
-            @Html.Raw(HeaderExplore)
-        }
+    @Html.Raw(HeaderExplore)
     </div>
+    }
 
     <ul class="list-unstyled">
 

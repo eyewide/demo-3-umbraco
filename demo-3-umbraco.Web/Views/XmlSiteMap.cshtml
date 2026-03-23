@@ -28,16 +28,14 @@
 @{
     void RenderSiteMapUrlEntry(IPublishedContent? node)
     {
-       var changeFreq = node != null && node.HasValue("searchEngineChangeFrequency", "true") ? node.Value("searchEngineChangeFrequency") : "monthly";
+    var changeFreq = node != null && node.HasValue("searchEngineChangeFrequency", "true") ? node.Value("searchEngineChangeFrequency") : "monthly";
 
-        var priority = node?.HasValue("searchEngineRelativePriority") == true ? node.Value<string>("searchEngineRelativePriority") : "0.5";
+    var priority = node?.HasValue("searchEngineRelativePriority") == true ? node.Value<string>("searchEngineRelativePriority") : "0.5";
+    <url>
+        <loc>@EnsureUrlStartsWithDomain(node?.Url(mode: UrlMode.Absolute) ?? string.Empty)</loc>
+        <lastmod>@(node != null ? string.Format("{0:s}+00:00", node.UpdateDate) : string.Empty)</lastmod>
 
-    
-        <url>
-            <loc>@EnsureUrlStartsWithDomain(node?.Url(mode: UrlMode.Absolute) ?? string.Empty)</loc>
-            <lastmod>@(node != null ? string.Format("{0:s}+00:00", node.UpdateDate) : string.Empty)</lastmod>
-
-        </url>
+    </url>
     }
 }
 
@@ -50,7 +48,6 @@
         }
         else {
             //var domainPrefix = string.Format("https://{0}/", HttpContext.Current.Request.ServerVariables["HTTP_HOST"]);
-       
             var domainPrefix = string.Format("https://{0}/", url.TrimEnd('/'));
             return domainPrefix;
         }

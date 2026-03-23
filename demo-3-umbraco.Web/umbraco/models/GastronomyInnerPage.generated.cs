@@ -50,36 +50,12 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
-		/// Body Sections: Select the body sections.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("bodySections")]
-		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockListModel BodySections => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockListModel>(_publishedValueFallback, "bodySections");
-
-		///<summary>
-		/// Image For Listing: Select the image for listing.
+		/// Image For Listing: Select the images for listing.
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("imageForListing")]
-		public virtual global::Umbraco.Cms.Core.Models.MediaWithCrops ImageForListing => this.Value<global::Umbraco.Cms.Core.Models.MediaWithCrops>(_publishedValueFallback, "imageForListing");
-
-		///<summary>
-		/// Section Body Text: Enter the body text for this section.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("sectionBodyText")]
-		public virtual global::Umbraco.Cms.Core.Strings.IHtmlEncodedString SectionBodyText => this.Value<global::Umbraco.Cms.Core.Strings.IHtmlEncodedString>(_publishedValueFallback, "sectionBodyText");
-
-		///<summary>
-		/// Section Title: Enter the title of this section.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("sectionTitle")]
-		public virtual string SectionTitle => this.Value<string>(_publishedValueFallback, "sectionTitle");
+		public virtual global::System.Collections.Generic.IEnumerable<global::Umbraco.Cms.Core.Models.MediaWithCrops> ImageForListing => this.Value<global::System.Collections.Generic.IEnumerable<global::Umbraco.Cms.Core.Models.MediaWithCrops>>(_publishedValueFallback, "imageForListing");
 
 		///<summary>
 		/// Short Description: Enter the short description.
@@ -90,26 +66,11 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual global::Umbraco.Cms.Core.Strings.IHtmlEncodedString ShortDescription => this.Value<global::Umbraco.Cms.Core.Strings.IHtmlEncodedString>(_publishedValueFallback, "shortDescription");
 
 		///<summary>
-		/// Hide in Main Menu: Click this if you want to hide the page from navigation.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[ImplementPropertyType("hideInMainMenu")]
-		public virtual bool HideInMainMenu => global::Umbraco.Cms.Web.Common.PublishedModels.Navigation.GetHideInMainMenu(this, _publishedValueFallback);
-
-		///<summary>
 		/// Hide in Navigation: Click this if you want to hide the page from navigation.
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		[ImplementPropertyType("hideInNavigation")]
 		public virtual bool HideInNavigation => global::Umbraco.Cms.Web.Common.PublishedModels.Navigation.GetHideInNavigation(this, _publishedValueFallback);
-
-		///<summary>
-		/// Menu Image: Select the image menu.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("menuImage")]
-		public virtual global::Umbraco.Cms.Core.Models.MediaWithCrops MenuImage => global::Umbraco.Cms.Web.Common.PublishedModels.Navigation.GetMenuImage(this, _publishedValueFallback);
 
 		///<summary>
 		/// Menu Title: Enter the menu title for this page.

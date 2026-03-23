@@ -28,9 +28,9 @@
                         <div class="newsletter">
                             @if (!string.IsNullOrWhiteSpace(HeaderNewsletter))
                             {   
-                                <div class="h3-sm-header">
-                                    @Html.Raw(HeaderNewsletter)
-                                </div>
+                            <div class="h3-sm-header">
+                                @Html.Raw(HeaderNewsletter)
+                            </div>
                             }
                             @await Html.PartialAsync("formNewsletter")
                         </div>
@@ -46,23 +46,24 @@
                         <div class="col-md-7">
                             @if (!string.IsNullOrWhiteSpace(HeaderNewsletter))
                             {  
-                                <div class="h3-sm-header">
-                                    @Html.Raw(HeaderNewsletter)
-                                </div>
+                            <div class="h3-sm-header">
+                                @Html.Raw(HeaderNewsletter)
+                            </div>
                             }
 
-                             @if (!string.IsNullOrEmpty(contactDetails)){    
-                            @Html.Raw(contactDetails)}
+                            @if (!string.IsNullOrEmpty(contactDetails)){    
+                            @Html.Raw(contactDetails)
+                            }
 
                             @if (socialMedias.Any())
                             {
-                                <ul class="list-unstyled social d-flex flex-wrap">
-                                    @foreach (var socialMedia in socialMedias)
-                                    {
-                                        var content = socialMedia.Content;
-                                        @await Html.PartialAsync("/Views/Partials/blocklist/Components/" + content.ContentType.Alias + ".cshtml", socialMedia)
-                                    }
-                                </ul>
+                            <ul class="list-unstyled social d-flex flex-wrap">
+                                @foreach (var socialMedia in socialMedias)
+                                {
+                                    var content = socialMedia.Content;
+                                    @await Html.PartialAsync("/Views/Partials/blocklist/Components/" + content.ContentType.Alias + ".cshtml", socialMedia)
+                                }
+                            </ul>
                             }
                         </div>
                     </div>
@@ -73,9 +74,9 @@
 
         @if (!string.IsNullOrWhiteSpace(FooterCopyright))
         { 
-            <div class="copyright text-center mt-5 pt-5 px-3 px-md-4 px-xl-5">
-                @Html.Raw(FooterCopyright)
-            </div>
+        <div class="copyright text-center pt-5 px-3 px-md-4 px-xl-5">
+            @Html.Raw(FooterCopyright)
+        </div>
         }
 
     </div>

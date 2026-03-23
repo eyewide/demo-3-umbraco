@@ -11,19 +11,24 @@
     var counterBlocks= 1;
 }
 
-    
-
-    @if (blockSections?.Any() == true)
-    {
-        foreach (var block in blockSections)
-        {
+    @if (blockSections?.Any() == true){
+        foreach (var block in blockSections){
             var content = block.Content;
-            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias+".cshtml", block)
+            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias+".cshtml", block, new ViewDataDictionary(ViewData){{"counter", @counterBlocks}})
             counterBlocks++;
         }
     }
- 
-    @await Html.PartialAsync("MyBlocks/Intro-Instagram")
+
+
+    <section class="row g-0 mt-offset testimonials-section bg-section-light align-items-center">
+        <div class="col-12 col-lg-6 instagram">
+            @await Html.PartialAsync("MyBlocks/Intro-Instagram")
+        </div>
+
+        <div class="col-12 col-lg-6">
+            @await Html.PartialAsync("MyBlocks/Intro-reviews")
+        </div>
+    </section>
+
     
-    @await Html.PartialAsync("MyBlocks/Intro-reviews")
-   
+    

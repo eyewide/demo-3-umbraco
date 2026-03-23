@@ -6,56 +6,55 @@
     var selection = site.Children
         .Where(x =>
             x.IsVisible() &&
-            x.Value<bool>("hideMainMenu") != true &&
             x.Value<bool>("hideInNavigation") != true
         );
 
     var i = 1;
 }
 
-<ul class="menu level-1">
-    <li>
-        <a href="@site.Url()" 
-           class="hover-target @(site.Id == Model.Id ? "active" : null)">
-            @Html.Raw(site.Value("menuTitle", fallback: Fallback.ToLanguage))
-        </a>
-    </li>
+    <ul class="menu level-1">
+        <li>
+            <a href="@site.Url()" 
+            class="hover-target @(site.Id == Model.Id ? "active" : null)">
+                @Html.Raw(site.Value("menuTitle", fallback: Fallback.ToLanguage))
+            </a>
+        </li>
 
-    @foreach (var item in selection)
-    {
-        // visible children except newspage
-        var visibleChildren = item.Children
-            .Where(x =>
-                x.IsVisible() &&
-                !x.IsDocumentType("newspage") &&
-                x.Value<bool>("hideInNavigation") != true
-            ).ToArray();
-
-        if (visibleChildren.Any())
+        @foreach (var item in selection)
         {
-            <li class="parent @(item.IsAncestorOrSelf(Model) ? "expanded" : null)">
-                <a href="@item.Url()" 
-                   class="hover-target @(item.IsAncestorOrSelf(Model) ? "active" : null)">
-                    @Html.Raw(item.Value("menuTitle", fallback: Fallback.ToLanguage))
-                </a>
+            // visible children except newspage
+            var visibleChildren = item.Children
+                .Where(x =>
+                    x.IsVisible() &&
+                    !x.IsDocumentType("newspage") &&
+                    x.Value<bool>("hideInNavigation") != true
+                ).ToArray();
 
-                <span class="arrow" aria-hidden="true">&#8203;</span>
+            if (visibleChildren.Any())
+            {
+                <li class="parent @(item.IsAncestorOrSelf(Model) ? "expanded" : null)">
+                    <a href="@item.Url()" 
+                    class="hover-target @(item.IsAncestorOrSelf(Model) ? "active" : null)">
+                        @Html.Raw(item.Value("menuTitle", fallback: Fallback.ToLanguage))
+                    </a>
 
-                @{ Traverse(item); }
-            </li>
+                    <span class="arrow" aria-hidden="true">&#8203;</span>
+
+                    @{ Traverse(item); }
+                </li>
+            }
+            else
+            {
+                <li>
+                    <a href="@item.Url()" class="hover-target @(item.IsAncestorOrSelf(Model) ? "active" : null)">
+                        @Html.Raw(item.Value("menuTitle", fallback: Fallback.ToLanguage))
+                    </a>
+                </li>
+            }
+
+            i++;
         }
-        else
-        {
-            <li>
-                <a href="@item.Url()" class="hover-target @(item.IsAncestorOrSelf(Model) ? "active" : null)">
-                    @Html.Raw(item.Value("menuTitle", fallback: Fallback.ToLanguage))
-                </a>
-            </li>
-        }
-
-        i++;
-    }
-</ul>
+    </ul>
 
 @* Helper method – recursive traversal *@
 @{

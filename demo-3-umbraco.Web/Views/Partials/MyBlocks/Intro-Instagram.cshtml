@@ -3,32 +3,48 @@
 @{
     var home = Model.AncestorOrSelf(1);
     var instagramLink = home.Value<Link>("instagramLink");
+    var instagramHashtag = home?.Value("instagramHashtag")?.ToString() ?? string.Empty;
+    var instagramTitle = home?.Value("instagramTitle")?.ToString() ?? string.Empty;
+    var instagramImage = home?.Value<IPublishedContent>("instagramImage");
 }
 
-@if (Model.HasValue("instagramImages")) {
-    var mediaItems = Model.Value<IEnumerable<IPublishedContent>>("instagramImages");
-    <section class="row g-0 mt-offset bg-section-light pt-offset">
-        <div class="instagram">
-            <h2 class="h1 text-center">@Html.Raw(Umbraco.GetDictionaryValue("HeaderInstagram"))</h2>
-            @if (mediaItems != null) {
-            <div class="InstaRow pt-3">
-                <div class="row m-0 p-0">
-                    @foreach (var j in mediaItems) {
-                    <div class="col-6 col-lg-3">
-                        <a href="@instagramLink?.Url" aria-label="@instagramLink?.Name" target="@instagramLink?.Target" title="@instagramLink?.Name">
-                            <picture>
-                                <source srcset="@j?.GetCropUrl("square-sm")&amp;format=webp&amp;quality=70" type="image/webp" media="(min-width: 992px)">
-                                <source srcset="@j?.GetCropUrl("square-sm")&amp;quality=70" type="image/jpeg" media="(min-width: 992px)">
-                                <img data-src="@j?.GetCropUrl("square-sm")&amp;quality=70" src="/images/placeholder.png" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", j)" class="img-fluid lazyload">
-                            </picture>
-                        </a>
-                    </div>
-                    }
-                </div>
-            </div>
-            }
-        </div>
-    </section>
+@if (Model.HasValue("instagramImage")) {
+    @if (!string.IsNullOrEmpty(instagramTitle)){
+    <h2 class="h1 text-white">
+        @if (!string.IsNullOrEmpty(instagramHashtag)){
+        <span class="section-subtitle">@Html.Raw(instagramHashtag)</span>
+        }
+        @Html.Raw(instagramTitle)
+    </h2>
+    }
+    <div class="InstaThumb">
+        @if (instagramImage != null){
+            
+            if (instagramLink != null){
+            <a href="@instagramLink?.Url" aria-label="@instagramLink?.Name" target="@instagramLink?.Target" title="@instagramLink?.Name">
+                <picture>
+                    <source srcset="@instagramImage.Url()?quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
+                    <source srcset="@instagramImage.Url()?quality=70" media="(min-width: 576px)" type="image/jpeg">
+                    <source srcset="@instagramImage.Url()?width=560&amp;quality=70&amp;format=webp" media="(min-width: 0px)" type="image/webp">
+                    <source srcset="@instagramImage.Url()?width=560&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
+                    <img src="@instagramImage.Url()?width=560&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", instagramImage)" class="img-fluid lazyload">
+                </picture>
+            </a>
+        }
+        else
+        {
+            <picture>
+                <source srcset="@instagramImage.Url()?quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
+                <source srcset="@instagramImage.Url()?quality=70" media="(min-width: 576px)" type="image/jpeg">
+                <source srcset="@instagramImage.Url()?width=560&amp;quality=70&format=webp" media="(min-width: 0px)" type="image/webp">
+                <source srcset="@instagramImage.Url()?width=560&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
+                <img src="@instagramImage.Url()?width=560&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", instagramImage)" class="img-fluid lazyload">
+            </picture>            
+        }
+    }                           
+    </div>
+
+    
 }
 
     

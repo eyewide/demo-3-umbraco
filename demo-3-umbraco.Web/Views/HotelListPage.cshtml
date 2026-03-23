@@ -17,11 +17,6 @@
 
     // Combined list (null-safe)
     IEnumerable<IPublishedContent> hotelList = hotelInnerPages.Concat(awardPages).Where(x => x != null).ToList();
-
-    // Block sections
-    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections") ?? Enumerable.Empty<BlockListItem>();
-
-    var counterBlocks = 1;
 }
 
     <section class="py-offset" id="anchor-section">
@@ -47,79 +42,67 @@
 
         @if (hotelList.Any())
         {
-            <div class="col-11 col-xl-10 mx-auto mt-5">
-                <div class="row align-items-start justify-content-center">
+        <div class="col-11 col-xl-10 mx-auto mt-5">
+            <div class="row align-items-start justify-content-center">
 
-                    @foreach (var x in hotelList)
-                    {
-                        var menuTitle = x.Value<string>("menuTitle") ?? string.Empty;
-                        var shortDescription = x.Value<string>("shortDescription") ?? string.Empty;
-                        var img = x.Value<IPublishedContent>("imageForListing");
+                @foreach (var x in hotelList)
+                {
+                    var menuTitle = x.Value<string>("menuTitle") ?? string.Empty;
+                    var shortDescription = x.Value<string>("shortDescription") ?? string.Empty;
+                    var img = x.Value<IPublishedContent>("imageForListing");
 
-                        <div class="col-12 col-md-6 col-xl-4 simple-box">
+                    <div class="col-12 col-md-6 col-xl-4 simple-box">
 
-                            @* IMAGE *@
-                            @if (img != null)
-                            {
-                                <div class="img-holder">
-                                    <a href="@x.Url()" title="@menuTitle">
-                                        <picture>
-                                            <source srcset="@img.GetCropUrl("square-md")&amp;quality=70&amp;format=webp" media="(min-width: 992px)" type="image/webp">
-                                            <source srcset="@img.GetCropUrl("square-md")&amp;quality=70" media="(min-width: 992px)" type="image/jpeg">
+                        @* IMAGE *@
+                        @if (img != null)
+                        {
+                            <div class="img-holder">
+                                <a href="@x.Url()" title="@menuTitle">
+                                    <picture>
+                                        <source srcset="@img.GetCropUrl("square-md")&amp;quality=70&amp;format=webp" media="(min-width: 992px)" type="image/webp">
+                                        <source srcset="@img.GetCropUrl("square-md")&amp;quality=70" media="(min-width: 992px)" type="image/jpeg">
 
-                                            <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 768px)" type="image/webp">
-                                            <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 768px)" type="image/jpeg">
+                                        <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" media="(min-width: 768px)" type="image/webp">
+                                        <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70" media="(min-width: 768px)" type="image/jpeg">
 
-                                            <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
-                                            <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70"          media="(min-width: 576px)" type="image/jpeg">
+                                        <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70&amp;format=webp" media="(min-width: 576px)" type="image/webp">
+                                        <source srcset="@img.GetCropUrl("horizontal-sm")&amp;quality=70"          media="(min-width: 576px)" type="image/jpeg">
 
-                                            <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" type="image/webp">
-                                            <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70"          type="image/jpeg">
+                                        <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70&amp;format=webp" type="image/webp">
+                                        <source srcset="@img.GetCropUrl("square-sm")&amp;quality=70"          type="image/jpeg">
 
-                                            <img src="@img.GetCropUrl("square-sm")&amp;quality=70"
-                                                alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)"
-                                                class="img-fluid fit-img lazyload">
-                                        </picture>
-                                    </a>
-                                </div>
+                                        <img src="@img.GetCropUrl("square-sm")&amp;quality=70"
+                                            alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)"
+                                            class="img-fluid fit-img lazyload">
+                                    </picture>
+                                </a>
+                            </div>
+                        }
+
+                        @* TEXT SECTION *@
+                        <div class="text-holder">
+
+                            @if (!string.IsNullOrEmpty(x.Value<string>("menuTitle"))){
+                            <h2 class="sm-header mb-3"><a href="@x.Url()" aria-label="@Html.Raw(x.Value("menuTitle"))">@Html.Raw(x.Value("menuTitle"))</a></h2>  
                             }
 
-                            @* TEXT SECTION *@
-                            <div class="text-holder">
+                            @if (!string.IsNullOrWhiteSpace(shortDescription))
+                            {
+                            @Html.Raw(shortDescription)
+                            }
 
-                                <h2 class="sm-header">
-                                    <a href="@x.Url()">@Html.Raw(menuTitle)</a>
-                                </h2>
-
-                                @if (!string.IsNullOrWhiteSpace(shortDescription))
-                                {
-                                    @Html.Raw(shortDescription)
-                                }
-
-                                <div class="pt-4 d-flex">
-                                    <a href="@x.Url()" title="@menuTitle" class="underline-btn">
-                                        @Html.Raw(Umbraco.GetDictionaryValue("ButtonMore"))
-                                    </a>
-                                </div>
+                            <div class="pt-4 d-flex">
+                                <a href="@x.Url()" title="@menuTitle" class="underline-btn">
+                                    @Html.Raw(Umbraco.GetDictionaryValue("ButtonMore"))
+                                </a>
                             </div>
-
                         </div>
-                    }
 
-                </div>
+                    </div>
+                }
+
             </div>
+        </div>
         }
 
     </section>
-
-
-    @if (blockSections.Any())
-    {
-        foreach (var block in blockSections)
-        {
-            var content = block.Content;
-
-            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias + ".cshtml",block)
-            counterBlocks++;
-        }
-    }

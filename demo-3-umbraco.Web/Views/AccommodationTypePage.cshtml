@@ -79,7 +79,7 @@
                 @* BODY TEXT *@
                 @if (!string.IsNullOrWhiteSpace(sectionBodyText))
                 {
-                    @Html.Raw(sectionBodyText)
+                @Html.Raw(sectionBodyText)
                 }
 
                 @* BOOKING BUTTON *@
@@ -96,62 +96,62 @@
             @* GALLERY *@
             @if (roomGalleryCarousel.Any())
             {
-                <div class="mt-offset">
-                    <div class="sliderContainer">
+            <div class="mt-offset">
+                <div class="sliderContainer">
 
-                        <div class="swiper roomGallerySwiper slider-arrows-bottom centered">
-                            <div class="swiper-wrapper">
+                    <div class="swiper roomGallerySwiper slider-arrows-bottom centered">
+                        <div class="swiper-wrapper">
 
-                                @foreach (var img in roomGalleryCarousel)
-                                {
-                                    <div class="swiper-slide">
-                                        <div class="image-box">
-                                            <div class="img-holder">
+                            @foreach (var img in roomGalleryCarousel)
+                            {
+                                <div class="swiper-slide">
+                                    <div class="image-box">
+                                        <div class="img-holder">
 
-                                                <picture>
-                                                    <source srcset="@img.GetCropUrl("horizontal-xl")&quality=70&format=webp"
-                                                        media="(min-width: 1480px)" type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("horizontal-xl")&quality=70"
-                                                        media="(min-width: 1480px)" type="image/jpeg">
+                                            <picture>
+                                                <source srcset="@img.GetCropUrl("horizontal-xl")&quality=70&format=webp"
+                                                    media="(min-width: 1480px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("horizontal-xl")&quality=70"
+                                                    media="(min-width: 1480px)" type="image/jpeg">
 
-                                                    <source srcset="@img.GetCropUrl("horizontal-lg")&quality=70&format=webp"
-                                                        media="(min-width: 992px)" type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("horizontal-lg")&quality=70"
-                                                        media="(min-width: 992px)" type="image/jpeg">
+                                                <source srcset="@img.GetCropUrl("horizontal-lg")&quality=70&format=webp"
+                                                    media="(min-width: 992px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("horizontal-lg")&quality=70"
+                                                    media="(min-width: 992px)" type="image/jpeg">
 
-                                                    <source srcset="@img.GetCropUrl("horizontal-md")&quality=70&format=webp"
-                                                        media="(min-width: 768px)" type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("horizontal-md")&quality=70"
-                                                        media="(min-width: 768px)" type="image/jpeg">
+                                                <source srcset="@img.GetCropUrl("horizontal-md")&quality=70&format=webp"
+                                                    media="(min-width: 768px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("horizontal-md")&quality=70"
+                                                    media="(min-width: 768px)" type="image/jpeg">
 
-                                                    <source srcset="@img.GetCropUrl("horizontal-sm")&quality=70&format=webp"
-                                                        media="(min-width: 576px)" type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("horizontal-sm")&quality=70"
-                                                        media="(min-width: 576px)" type="image/jpeg">
+                                                <source srcset="@img.GetCropUrl("horizontal-sm")&quality=70&format=webp"
+                                                    media="(min-width: 576px)" type="image/webp">
+                                                <source srcset="@img.GetCropUrl("horizontal-sm")&quality=70"
+                                                    media="(min-width: 576px)" type="image/jpeg">
 
-                                                    <source srcset="@img.GetCropUrl("square-sm")&quality=70&format=webp"
-                                                        type="image/webp">
-                                                    <source srcset="@img.GetCropUrl("square-sm")&quality=70" type="image/jpeg">
+                                                <source srcset="@img.GetCropUrl("square-sm")&quality=70&format=webp"
+                                                    type="image/webp">
+                                                <source srcset="@img.GetCropUrl("square-sm")&quality=70" type="image/jpeg">
 
-                                                    <img src="@img.GetCropUrl("square-sm")&quality=70"
-                                                        alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)"
-                                                        class="img-fluid lazyload">
-                                                </picture>
+                                                <img src="@img.GetCropUrl("square-sm")&quality=70"
+                                                    alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", img)"
+                                                    class="img-fluid lazyload">
+                                            </picture>
 
-                                            </div>
                                         </div>
                                     </div>
-                                }
-
-                            </div>
-
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div>
+                                </div>
+                            }
 
                         </div>
 
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+
                     </div>
+
                 </div>
+            </div>
             }
 
             @* FACILITIES *@
@@ -159,7 +159,8 @@
             {
                 <div class="mt-offset">
                     <div class="facilities-section text-start">
-                        <h2>@Html.Raw(Umbraco.GetDictionaryValue("HeaderFacilities"))</h2>
+                        @if (!string.IsNullOrEmpty(Umbraco.GetDictionaryValue("HeaderFacilities"))){
+                        <h2>@Html.Raw(Umbraco.GetDictionaryValue("HeaderFacilities"))</h2>}
                         @Html.Raw(roomFacilities)
                     </div>
                 </div>

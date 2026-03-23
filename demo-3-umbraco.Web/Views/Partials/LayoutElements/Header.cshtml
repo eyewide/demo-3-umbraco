@@ -7,7 +7,6 @@
     var bookingLink = home?.Value<Link>("bookingLink");
     var bookingOnlineLink = home?.Value<Link>("bookingOnlineLink");
     var websiteLogo = home?.Value<MediaWithCrops>("websiteLogo");
-    var menuImage = Model?.Value<MediaWithCrops>("menuImage")?? home?.Value<MediaWithCrops>("menuImage");
     var contactDetails = home?.Value<string>("contactDetails") ?? string.Empty;
 
     var contactTelNo = Umbraco.GetDictionaryValue("TelephoneNumber")?.ToString();
@@ -47,49 +46,25 @@
                         </nav>
 
                         <div class="burger-img-bg">
-                            @if (menuImage != null) {
-                            <div class="menu-image">
-                                <picture>
-                                    <source srcset="@menuImage.GetCropUrl("horizontal-sm")&amp;quality=75&amp;format=webp" type="image/webp" media="(min-width: 0px)">
-                                    <source srcset="@menuImage.GetCropUrl("horizontal-sm")&amp;quality=75" type="image/jpeg" media="(min-width: 0px)">
-                                    <img src="@menuImage.GetCropUrl("horizontal-sm")&amp;quality=75" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", menuImage)" class="img-fluid">
-                                </picture>
-                            </div>}
                             <div class="menu-contact">
                                 @if (!string.IsNullOrEmpty(contactDetails)){    
                                 @Html.Raw(contactDetails)}
 
                                 @if (socialMedias.Any())
                                 {
-                                    <ul class="list-unstyled social d-flex flex-wrap justify-content-end">
-                                        @foreach (var socialMedia in socialMedias)
-                                        {
-                                            var content = socialMedia.Content;
-                                            @await Html.PartialAsync("/Views/Partials/blocklist/Components/" + content.ContentType.Alias + ".cshtml", socialMedia)
-                                        }
-                                    </ul>
+                                <ul class="list-unstyled social d-flex flex-wrap justify-content-end">
+                                    @foreach (var socialMedia in socialMedias)
+                                    {
+                                        var content = socialMedia.Content;
+                                        @await Html.PartialAsync("/Views/Partials/blocklist/Components/" + content.ContentType.Alias + ".cshtml", socialMedia)
+                                    }
+                                </ul>
                                 }
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            @await Html.PartialAsync("MyBlocks/languages")
-            
-        </div>
-
-        <div class="col-4 text-center">
-            <div class="logo">
-                @if (websiteLogo != null)
-                {
-                    <a href="@home?.Url()" aria-label="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))" title="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))">
-                        <img src="@websiteLogo.Url()" class="img-fluid" alt="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))" fetchpriority="high">
-                    </a>
-                }
-            </div>
-        </div>
-
-        <div class="col-4 d-flex align-items-center justify-content-end right-col">
             @if (!string.IsNullOrWhiteSpace(contactTelNo))
             {
                 <div class="tel-icon">
@@ -107,13 +82,27 @@
                 </a>
             </div>
             }
-            
+        </div>
+
+        <div class="col-4 text-center">
+            <div class="logo">
+                @if (websiteLogo != null)
+                {
+                    <a href="@home?.Url()" aria-label="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))" title="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))">
+                        <img src="@websiteLogo.Url()" class="img-fluid" alt="@Html.Raw(Umbraco.GetDictionaryValue("AltText-HeaderLogo"))" fetchpriority="high">
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="col-4 d-flex align-items-center justify-content-end right-col">
+            @await Html.PartialAsync("MyBlocks/languages")
 
             @if (!string.IsNullOrEmpty(bookingLink?.Url))
             {
-                <a href="@bookingLink.Url" target="@bookingLink.Target" title="@bookingLink.Name" class="btn btn--book">
-                    @Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))
-                </a>
+            <a href="@bookingLink.Url" target="@bookingLink.Target" title="@bookingLink.Name" class="btn btn--book">
+                @Html.Raw(Umbraco.GetDictionaryValue("ButtonBookNow"))
+            </a>
             }
         </div>
 

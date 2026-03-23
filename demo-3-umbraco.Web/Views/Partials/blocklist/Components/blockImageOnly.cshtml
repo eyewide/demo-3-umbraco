@@ -4,15 +4,17 @@
 @{
     var content = (ContentModels.BlockImageOnly)Model.Content;
     var settings = (ContentModels.GenericBlockSettings)Model.Settings;
-    var blockImage = content.Value<IPublishedContent>("image");
+    var blockImage = content.Value<IPublishedContent>("sectionImage");
     bool disabled = settings.Value<bool>("disableSection");
 }
 
 @if (!disabled)
 {
-    <section class="bgImageSection mt-offset">
-        @if (blockImage != null)
-        {
+    @* IMAGE *@
+    @if (blockImage != null)
+    {
+    <section class="bgImageSection mb-offset">
+       
             <picture>
                 <source srcset="@blockImage.GetCropUrl("horizontal-xl")&amp;quality=70&amp;format=webp" media="(min-width: 1480px)" type="image/webp">
                 <source srcset="@blockImage.GetCropUrl("horizontal-xl")&amp;quality=70" media="(min-width: 1480px)" type="image/jpeg">
@@ -26,6 +28,6 @@
                 <source srcset="@blockImage.GetCropUrl("horizontal-xs")&amp;quality=70" media="(min-width: 0px)" type="image/jpeg">
                 <img src="@blockImage.GetCropUrl("horizontal-xs")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", blockImage)" class="img-fluid img-fit lazyload">
             </picture>
-        }
-    </section>
+        
+    </section>}
 }

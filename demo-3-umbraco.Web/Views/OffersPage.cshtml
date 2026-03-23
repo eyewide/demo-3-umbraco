@@ -16,12 +16,6 @@
     var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
     var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
 
-    // BLOCKS
-    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections")
-    ?? Enumerable.Empty<BlockListItem>();
-
-    var counterBlocks = 1;
-
     // OFFERS
     var offers = Model.DescendantsOfType("offerPage").Where(x => x.IsVisible()).ToList();
 
@@ -34,7 +28,7 @@
 
     <section class="py-offset" id="anchor-section">
 
-        <div class="col-11 col-xl-10 m-auto">
+        <div class="col-11 col-xl-10 mx-auto">
             <div class="content-max-width text-content">
 
                 @* TITLE *@
@@ -130,11 +124,9 @@
                             @* TEXT *@
                             <div class="text-holder">
 
-                                <h2 class="sm-header">
-                                    <a href="@x.Url()">
-                                        @Html.Raw(menuTitle)
-                                    </a>
-                                </h2>
+                                @if (!string.IsNullOrEmpty(x.Value<string>("menuTitle"))){
+                                <h2 class="sm-header mb-3"><a href="@x.Url()" aria-label="@Html.Raw(x.Value("menuTitle"))">@Html.Raw(x.Value("menuTitle"))</a></h2>  
+                                }
 
                                 @if (!string.IsNullOrWhiteSpace(offerShortDescription))
                                 {
@@ -157,17 +149,3 @@
         }
 
     </section>
-
-
-    @* ========= BLOCK LIST SECTIONS AFTER OFFERS ========== *@
-    @if (blockSections.Any())
-    {
-        foreach (var block in blockSections)
-        {
-            var content = block.Content;
-
-            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias + ".cshtml",block)
-
-        counterBlocks++;
-        }
-    }

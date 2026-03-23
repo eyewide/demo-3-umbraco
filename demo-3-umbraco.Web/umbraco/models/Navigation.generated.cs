@@ -22,18 +22,9 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 	/// <summary>Navigation</summary>
 	public partial interface INavigation : IPublishedElement
 	{
-		/// <summary>Hide in Main Menu</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		bool HideInMainMenu { get; }
-
 		/// <summary>Hide in Navigation</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		bool HideInNavigation { get; }
-
-		/// <summary>Menu Image</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		global::Umbraco.Cms.Core.Models.MediaWithCrops MenuImage { get; }
 
 		/// <summary>Menu Title</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
@@ -77,17 +68,6 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
-		/// Hide in Main Menu: Click this if you want to hide the page from navigation.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[ImplementPropertyType("hideInMainMenu")]
-		public virtual bool HideInMainMenu => GetHideInMainMenu(this, _publishedValueFallback);
-
-		/// <summary>Static getter for Hide in Main Menu</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		public static bool GetHideInMainMenu(INavigation that, IPublishedValueFallback publishedValueFallback) => that.Value<bool>(publishedValueFallback, "hideInMainMenu");
-
-		///<summary>
 		/// Hide in Navigation: Click this if you want to hide the page from navigation.
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
@@ -97,19 +77,6 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		/// <summary>Static getter for Hide in Navigation</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		public static bool GetHideInNavigation(INavigation that, IPublishedValueFallback publishedValueFallback) => that.Value<bool>(publishedValueFallback, "hideInNavigation");
-
-		///<summary>
-		/// Menu Image: Select the image menu.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("menuImage")]
-		public virtual global::Umbraco.Cms.Core.Models.MediaWithCrops MenuImage => GetMenuImage(this, _publishedValueFallback);
-
-		/// <summary>Static getter for Menu Image</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		public static global::Umbraco.Cms.Core.Models.MediaWithCrops GetMenuImage(INavigation that, IPublishedValueFallback publishedValueFallback) => that.Value<global::Umbraco.Cms.Core.Models.MediaWithCrops>(publishedValueFallback, "menuImage");
 
 		///<summary>
 		/// Menu Title: Enter the menu title for this page.

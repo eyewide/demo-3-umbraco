@@ -11,15 +11,11 @@
     var sectionTitle = Model.Value<string>("sectionTitle") ?? string.Empty;
     var sectionBodyText = Model.Value<string>("sectionBodyText") ?? string.Empty;
 
-    var blockSections = Model.Value<IEnumerable<BlockListItem>>("bodySections") ?? Enumerable.Empty<BlockListItem>();
-
-    int counterBlocks = 1;
-
     // Inner pages (null-safe)
     var destinations = Model.DescendantsOfType("gastronomyInnerPage").Where(x => x.IsVisible()).ToList();
 }
 
-    <section class="py-offset" id="anchor-section">
+    <section class="mt-offset" id="anchor-section">
         <div class="col-11 col-xl-10 m-auto">
 
             <div class="content-max-width text-content">
@@ -39,21 +35,6 @@
         </div>
     </section>
 
-
-    @if (blockSections.Any())
-    {
-        foreach (var block in blockSections)
-        {
-            var content = block.Content;
-
-            @await Html.PartialAsync("~/Views/Partials/blockList/Components/" + content.ContentType.Alias + ".cshtml",block)
-
-            counterBlocks++;
-        }
-    }
-
-
-    @if (Model.Level >= 2)
-    {
+    @if (Model != null && Model.Level>=2){
         @await Html.PartialAsync("MyBlocks/Listing-subpagesAsContentRows")
-    }
+    } 

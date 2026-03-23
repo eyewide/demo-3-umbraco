@@ -18,14 +18,14 @@ using Umbraco.Extensions;
 
 namespace Umbraco.Cms.Web.Common.PublishedModels
 {
-	/// <summary>XmlSiteMap</summary>
-	[PublishedModel("xmlSiteMap")]
-	public partial class XmlSiteMap : PublishedContentModel, INavigation
+	/// <summary>blockText</summary>
+	[PublishedModel("blockText")]
+	public partial class BlockText : PublishedElementModel
 	{
 		// helpers
 #pragma warning disable 0109 // new is redundant
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		public new const string ModelTypeAlias = "xmlSiteMap";
+		public new const string ModelTypeAlias = "blockText";
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
@@ -34,14 +34,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 			=> PublishedModelUtility.GetModelContentType(publishedSnapshotAccessor, ModelItemType, ModelTypeAlias);
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<XmlSiteMap, TValue>> selector)
+		public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<BlockText, TValue>> selector)
 			=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(publishedSnapshotAccessor), selector);
 #pragma warning restore 0109
 
 		private IPublishedValueFallback _publishedValueFallback;
 
 		// ctor
-		public XmlSiteMap(IPublishedContent content, IPublishedValueFallback publishedValueFallback)
+		public BlockText(IPublishedElement content, IPublishedValueFallback publishedValueFallback)
 			: base(content, publishedValueFallback)
 		{
 			_publishedValueFallback = publishedValueFallback;
@@ -50,33 +50,27 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
-		/// Blacklisted Document: xmlsitemap
+		/// Section Body Text: Enter the body text for this section.
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("blacklistedDocument")]
-		public virtual string BlacklistedDocument => this.Value<string>(_publishedValueFallback, "blacklistedDocument");
+		[ImplementPropertyType("sectionBodyText")]
+		public virtual global::Umbraco.Cms.Core.Strings.IHtmlEncodedString SectionBodyText => this.Value<global::Umbraco.Cms.Core.Strings.IHtmlEncodedString>(_publishedValueFallback, "sectionBodyText");
 
 		///<summary>
-		/// Hide in Navigation: Click this if you want to hide the page from navigation.
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[ImplementPropertyType("hideInNavigation")]
-		public virtual bool HideInNavigation => global::Umbraco.Cms.Web.Common.PublishedModels.Navigation.GetHideInNavigation(this, _publishedValueFallback);
-
-		///<summary>
-		/// Menu Title: Enter the menu title for this page.
+		/// Section Subtitle: Enter the subtitle for this section.
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("menuTitle")]
-		public virtual string MenuTitle => global::Umbraco.Cms.Web.Common.PublishedModels.Navigation.GetMenuTitle(this, _publishedValueFallback);
+		[ImplementPropertyType("sectionSubtitle")]
+		public virtual string SectionSubtitle => this.Value<string>(_publishedValueFallback, "sectionSubtitle");
 
 		///<summary>
-		/// Show in Footer Menu: Click this if you want to hide the page to appears in footer menu.
+		/// Section Title: Enter the title for this section.
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "13.12.0+7dcc730")]
-		[ImplementPropertyType("showInFooterMenu")]
-		public virtual bool ShowInFooterMenu => global::Umbraco.Cms.Web.Common.PublishedModels.Navigation.GetShowInFooterMenu(this, _publishedValueFallback);
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("sectionTitle")]
+		public virtual string SectionTitle => this.Value<string>(_publishedValueFallback, "sectionTitle");
 	}
 }
