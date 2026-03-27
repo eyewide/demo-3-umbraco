@@ -93,7 +93,7 @@
                         <source srcset="@x.GetCropUrl("horizontal-sm")&quality=70" media="(min-width: 576px)" type="image/jpeg">
                         <source srcset="@x.GetCropUrl("square-sm")&quality=70&format=webp" media="(min-width: 0px)" type="image/webp">
                         <source srcset="@x.GetCropUrl("square-sm")&quality=70" media="(min-width: 0px)" type="image/jpeg">
-                        <img src="@x.GetCropUrl("square-sm")&quality=70" alt="Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", x)" class="img-fluid ">                
+                        <img src="@x.GetCropUrl("square-sm")&quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", x)" class="img-fluid">                
                     </picture>
                 </div>
                 i++;    

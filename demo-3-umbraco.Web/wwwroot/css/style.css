@@ -2855,6 +2855,7 @@ footer .underline-btn.black:before {
 
 .form-label {
   text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.005);
 }
 
 @media screen and (max-width: 1399px) {

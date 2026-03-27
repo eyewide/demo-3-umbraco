@@ -13,7 +13,7 @@
     @* IMAGE *@
     @if (blockImage != null)
     {
-    <section class="bgImageSection mb-offset">
+    <div class="bgImageSection mb-offset">
        
             <picture>
                 <source srcset="@blockImage.GetCropUrl("horizontal-xl")&amp;quality=70&amp;format=webp" media="(min-width: 1480px)" type="image/webp">
@@ -29,5 +29,5 @@
                 <img src="@blockImage.GetCropUrl("horizontal-xs")&amp;quality=70" alt="@await Html.PartialAsync("/Views/Partials/Shared/_AltTextImage.cshtml", blockImage)" class="img-fluid img-fit lazyload">
             </picture>
         
-    </section>}
+    </div>}
 }
