@@ -5,6 +5,7 @@
     // Ασφαλής ανάκτηση του root node
     var home = Model?.Root();
     var scriptsInHeader = home?.Value<string>("scriptsInHeader");
+    var schemaJson =  Model?.Value<string>("schemaJson");
 }
 
 <!-- PREFETCH STARTS HERE -->
@@ -43,7 +44,7 @@
     @Html.Raw(scriptsInHeader)
 }
 
-@if (!string.IsNullOrWhiteSpace(Model?.Value<string>("schemaJson"))){
+@if (!string.IsNullOrWhiteSpace(schemaJson)){
 <!-- Schema JSON -->
-@Html.Raw(Model.Value<string>("schemaJson"))
+@Html.Raw(schemaJson)
 }
