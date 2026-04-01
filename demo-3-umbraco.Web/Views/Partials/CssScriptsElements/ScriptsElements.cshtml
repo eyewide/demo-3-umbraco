@@ -43,11 +43,6 @@
     </script>
     }
 
-    @if (!string.IsNullOrWhiteSpace(Model?.Value<string>("schemaJson"))){
-    <!-- Schema JSON -->
-    @Html.Raw(Model.Value<string>("schemaJson"))
-    }
-
     @if (Model?.IsDocumentType("GalleryPage") == true){
     <!-- Gallery Masonry -->
     <script>

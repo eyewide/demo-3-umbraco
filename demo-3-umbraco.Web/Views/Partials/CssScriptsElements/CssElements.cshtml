@@ -42,3 +42,8 @@
 <!-- SCRIPTS IN HEADER -->
     @Html.Raw(scriptsInHeader)
 }
+
+@if (!string.IsNullOrWhiteSpace(Model?.Value<string>("schemaJson"))){
+<!-- Schema JSON -->
+@Html.Raw(Model.Value<string>("schemaJson"))
+}
